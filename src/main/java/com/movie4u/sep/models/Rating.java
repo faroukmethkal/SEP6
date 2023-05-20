@@ -1,22 +1,33 @@
 package com.movie4u.sep.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "ratings")
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
 public class Rating {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int movieId;
     private float rating;
     private int votes;
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public int getVotes() {
+        return votes;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
 }

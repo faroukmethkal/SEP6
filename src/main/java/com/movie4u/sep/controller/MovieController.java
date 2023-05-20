@@ -20,6 +20,7 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<List<Movie>> findMovieByTitle(@RequestParam(required = true) String title) {
+
               return ResponseEntity.ok(movieService.findMovieByTitle(title));
     }
 }

@@ -1,21 +1,31 @@
 package com.movie4u.sep.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-import javax.persistence.*;
-
-@Entity
-@Table(name = "people")
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
 public class People {
-    @Id
     private int id;
     private String name;
     private Long birth;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getBirth() {
+        return birth;
+    }
+
+    public void setBirth(Long birth) {
+        this.birth = birth;
+    }
 }

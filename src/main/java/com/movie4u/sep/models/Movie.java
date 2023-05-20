@@ -1,22 +1,23 @@
 package com.movie4u.sep.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Data;
 
-import javax.persistence.*;
+import java.util.List;
 
-@Entity
-@Table(name = "movies")
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
+
+@JsonSerialize
+@Data
 public class Movie {
 
-    @Id
     private int id;
     private String title;
     private int year;
+
+    private Rating rating;
+
+    List<People> directors;
+
+    List<People> stars;
+
 }
