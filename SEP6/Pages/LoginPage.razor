@@ -1,0 +1,68 @@
+﻿@page "/"
+@inject HttpClient httpClient
+@inject NavigationManager navigationManager
+@using System.Net.Http;
+
+<style>
+    .container {
+        display: flex;
+        align-items: center;
+    }
+
+    .image-container {
+        margin-right: 20px;
+    }
+</style>
+
+
+<h3>Movies4U</h3>
+
+<div class="container">
+    <div class="image-container">
+        <img src="img/movie_system_logo.jpg" alt="Your Image" />
+    </div>
+
+<div class="form-group">
+    <label for="name">Name:</label>
+    <input id="name" class="form-control" @bind="@name" />
+</div>
+
+<div class="form-group">
+    <label for="id">ID:</label>
+    <input id="id" class="form-control" @bind="@id" />
+</div>
+</div>
+
+<button class="btn btn-primary" @onclick="Login">Login</button>
+
+<p>@errorMessage</p>
+
+@code {
+    private string name;
+    private string id;
+    private string errorMessage;
+
+    private async Task Login()
+    {
+        var request = new { Name = name, ID = id };
+        var response = await httpClient.PostAsJsonAsync("/api/login", request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            bool isValid = await response.Content.ReadFromJsonAsync<bool>();
+            if (isValid)
+            {
+                navigationManager.NavigateTo("/dashboard");
+            }
+            else
+            {
+                errorMessage = "Invalid name or ID.";
+            }
+        }
+        else
+        {
+            //TODO: Handle error
+            errorMessage = "An error occurred during login.";
+        }
+    }
+}

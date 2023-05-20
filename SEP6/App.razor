@@ -10,3 +10,12 @@
         </LayoutView>
     </NotFound>
 </Router>
+
+@if (!IsLoggedIn)
+{
+    <LoginPage />
+}
+
+@code {
+    private bool IsLoggedIn = false;
+}
