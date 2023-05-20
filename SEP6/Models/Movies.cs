@@ -7,6 +7,6 @@
         public int year { get; set; }
         public List<Directors> directors { get; set; }
         public List<Stars> stars { get; set; }
-        public List<Ratings> ratings { get; set; }
+        public Ratings ratings { get; set; }
     }
 }

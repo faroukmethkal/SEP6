@@ -1,7 +1,12 @@
 ﻿@page "/"
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavgMan
+@inject IServiceUser _serviceUser;
 @using System.Net.Http;
+@using SEP6.Authentication;
+@using SEP6.Data;
 
 <style>
     .container {
@@ -19,7 +24,7 @@
 
 <div class="container">
     <div class="image-container">
-        <img src="img/movie_system_logo.jpg" alt="Your Image" />
+        <img src="img/movie_system_logo.jpg" alt="Movies 4 U" />
     </div>
 
 <div class="form-group">
@@ -39,30 +44,25 @@
 
 @code {
     private string name;
-    private string id;
+    private int id;
     private string errorMessage;
 
     private async Task Login()
     {
-        var request = new { Name = name, ID = id };
-        var response = await httpClient.PostAsJsonAsync("/api/login", request);
+       
 
-        if (response.IsSuccessStatusCode)
+
+        //TODO: New page to navigate after login
+        try
         {
-            bool isValid = await response.Content.ReadFromJsonAsync<bool>();
-            if (isValid)
-            {
-                navigationManager.NavigateTo("/dashboard");
-            }
-            else
-            {
-                errorMessage = "Invalid name or ID.";
-            }
+            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateLogin(name, id);
+            NavgMan.NavigateTo("/dwqdq");
         }
-        else
+        catch (Exception e)
         {
-            //TODO: Handle error
-            errorMessage = "An error occurred during login.";
+            Console.WriteLine(e.Message);
+            errorMessage = e.Message;
         }
+
     }
 }
