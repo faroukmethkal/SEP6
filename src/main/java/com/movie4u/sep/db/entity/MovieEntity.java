@@ -11,7 +11,7 @@ public class MovieEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
-    private int year;
+    private Long year;
 
     @OneToMany(mappedBy = "movieEntity", fetch = FetchType.EAGER)
     private Set<StarEntity> starEntities;
@@ -30,7 +30,7 @@ public class MovieEntity {
         return title;
     }
 
-    public int getYear() {
+    public Long getYear() {
         return year;
     }
 

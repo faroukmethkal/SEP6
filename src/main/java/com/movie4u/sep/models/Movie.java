@@ -12,7 +12,7 @@ public class Movie {
 
     private int id;
     private String title;
-    private int year;
+    private Long year;
 
     private Rating rating;
 
