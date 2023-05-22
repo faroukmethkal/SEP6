@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using SEP6.Authentication;
+@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavgMan
 
 <PageTitle>SEP6</PageTitle>
 
@@ -9,7 +13,11 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+ <AuthorizeView>
+    <Authorized>
+        <button class="btn btn-primary" @onclick="Logout">Logout</button>
+    </Authorized>
+    </AuthorizeView>
         </div>
 
         <article class="content px-4">
@@ -17,3 +25,12 @@
         </article>
     </main>
 </div>
+
+@code {
+    private async Task Logout()
+    {
+        ((CustomAuthenticationStateProvider)AuthenticationStateProvider).Logout();
+        NavgMan.NavigateTo("/");
+    }
+}
+

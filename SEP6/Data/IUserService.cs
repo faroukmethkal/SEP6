@@ -2,7 +2,7 @@
 
 namespace SEP6.Data
 {
-    public interface IServiceUser
+    public interface IUserService
     {
         Task<People> LoginUser(string name, int Id);
     }

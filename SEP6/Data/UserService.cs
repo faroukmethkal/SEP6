@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 
 namespace SEP6.Data
 {
-    public class UserService : IServiceUser
+    public class UserService : IUserService
     {
        private HttpClient client;
 
@@ -38,8 +38,11 @@ namespace SEP6.Data
                 people.Id = Id;
                 return people;
             }
-            throw new Exception(responseStatusCode);
-
+            else
+            {
+                throw new Exception(responseStatusCode);
+            }
+            
         }
     }
 }

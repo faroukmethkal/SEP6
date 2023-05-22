@@ -11,16 +11,16 @@ namespace SEP6.Authentication
     public class CustomAuthenticationStateProvider : ServerAuthenticationStateProvider
     {
         private readonly IJSRuntime jsonRuntime;
-        private readonly IServiceUser serverData;
+        private readonly IUserService serverData;
         private People cachedUser;
 
-        public CustomAuthenticationStateProvider(IJSRuntime jsonRuntime, IServiceUser serverData)
+        public CustomAuthenticationStateProvider(IJSRuntime jsonRuntime, IUserService serverData)
         {
             this.jsonRuntime = jsonRuntime;
             this.serverData = serverData;
         }
 
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var identity = new ClaimsIdentity();
             if (cachedUser == null)
@@ -36,11 +36,18 @@ namespace SEP6.Authentication
             ClaimsPrincipal cachedClaimsPrincipal = new ClaimsPrincipal(identity);
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
-
+ 
         public async Task ValidateLogin(string name, int Id)
         {
-            if (string.IsNullOrEmpty(name)) throw new Exception("Enter name");
-            if (Id == null) throw new Exception("Enter Id");
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new Exception("Enter name");
+            }
+            else if (Id == null)
+            {
+                throw new Exception("Enter Id");
+            } 
+            
 
             ClaimsIdentity identity = new ClaimsIdentity();
             try

@@ -20,10 +20,10 @@ namespace SEP6
 
             services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);
 
-            services.AddScoped<IServiceUser, UserService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-            services.AddHttpClient<IServiceUser, UserService>(client =>
+            services.AddHttpClient<IUserService, UserService>(client =>
             {
                 client.BaseAddress = new Uri("https://app-backend-sep-230516174355.azurewebsites.net/");
             });

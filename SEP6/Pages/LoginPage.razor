@@ -1,9 +1,9 @@
-﻿@page "/"
+﻿@page "/login"
 @inject HttpClient httpClient
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavgMan
-@inject IServiceUser _serviceUser;
+@inject IUserService _serviceUser;
 @using System.Net.Http;
 @using SEP6.Authentication;
 @using SEP6.Data;
@@ -38,7 +38,15 @@
 </div>
 </div>
 
-<button class="btn btn-primary" @onclick="Login">Login</button>
+<AuthorizeView>
+
+    <NotAuthorized>
+        <button class="btn btn-primary" @onclick="Login">Login</button>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
 
 <p>@errorMessage</p>
 
@@ -46,6 +54,8 @@
     private string name;
     private int id;
     private string errorMessage;
+
+ 
 
     private async Task Login()
     {
@@ -56,7 +66,7 @@
         try
         {
             await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateLogin(name, id);
-            NavgMan.NavigateTo("/dwqdq");
+            NavgMan.NavigateTo("/");
         }
         catch (Exception e)
         {

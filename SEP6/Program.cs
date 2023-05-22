@@ -17,14 +17,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IServiceUser, UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddHttpClient<IServiceUser, UserService>(client =>
-{
-    client.BaseAddress = new Uri("https://app-backend-sep-230516174355.azurewebsites.net/");
-});
+
 
 // Register HttpClient service
 builder.Services.AddScoped<HttpClient>();
