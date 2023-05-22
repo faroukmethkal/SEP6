@@ -17,7 +17,7 @@ namespace SEP6.Data
         {
             People people = new People();
 
-
+            Console.WriteLine("Entering UserService");
             string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/login";
             string username = name;
             int userId = Id;

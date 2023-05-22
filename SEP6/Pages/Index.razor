@@ -1,0 +1,43 @@
+﻿@page "/index"
+@using SEP6.Data;
+@using SEP6.Models;
+@using SEP6.Pages.Components
+@inject HttpClient httpClient
+
+<h3>MOVIES</h3>
+
+
+@foreach (var movie in moviesList)
+{
+    <div class="card">
+        <img src="@movie.ImageURL" alt="Movie Poster" />
+        <div class="card-body">
+            <h5 class="card-title">@movie.title</h5>
+            @*<p class="card-text">@movie.Description</p>*@
+        </div>
+    </div>
+}
+
+@code {
+    private List<Movies> moviesList { get; set; }
+    private IMovieService movieService;
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+       
+        
+
+        moviesList = moviesList.Search.Select(movie => new Movies
+            {
+                title = movie.title,
+                description = movie.description,
+                ImageURL = movie.ImageURL
+            }).ToList();
+    }
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    Movies = await httpClient.GetFromJsonAsync<List<Movies>>("/movies");
+    //}
+}

@@ -1,24 +1,23 @@
-﻿@page "/"
-@using SEP6.Authentication;
+﻿@using SEP6.Authentication;
 @inherits LayoutComponentBase
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavgMan
 
-<PageTitle>SEP6</PageTitle>
+<PageTitle>Movies4U</PageTitle>
 
 <div class="page">
     <div class="sidebar">
         <NavMenu />
         <AuthorizeView>
-        <Authorized>
-            <button class="btn btn-primary" @onclick="PerformLogout">Logout</button>
-        </Authorized>
+            <Authorized>
+                <button class="btn btn-primary" @onclick="PerformLogout">Logout</button>
+            </Authorized>
         </AuthorizeView>
-        
     </div>
     <main>
-        <div class="top-row px-4">
+        <div class="top-row">
+            <!-- Add content to the top row if needed -->
         </div>
         <div class="content">
             @Body
@@ -29,7 +28,6 @@
 
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    private string authMessage = "The user is NOT authenticated.";
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,7 +38,7 @@
 
             if (user?.Identity is not null && user.Identity.IsAuthenticated)
             {
-                NavgMan.NavigateTo("/");
+                NavgMan.NavigateTo("/index");
             }
             else
                 NavgMan.NavigateTo("/login");

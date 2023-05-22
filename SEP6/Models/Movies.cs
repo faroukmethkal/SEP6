@@ -8,5 +8,9 @@
         public List<Directors> directors { get; set; }
         public List<Stars> stars { get; set; }
         public Ratings ratings { get; set; }
+        
+        public string description { get; set; }
+        public string ImageURL { get; set; }
+     //   public List<Movies> Search { get; set; }
     }
 }
