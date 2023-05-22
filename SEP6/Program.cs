@@ -21,12 +21,16 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+builder.Services.AddOptions();
+builder.Services.AddAuthorizationCore();
+
 
 
 // Register HttpClient service
 builder.Services.AddScoped<HttpClient>();
 
 var app = builder.Build();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

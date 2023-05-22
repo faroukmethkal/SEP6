@@ -55,14 +55,9 @@
     private int id;
     private string errorMessage;
 
- 
 
     private async Task Login()
     {
-       
-
-
-        //TODO: New page to navigate after login
         try
         {
             await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateLogin(name, id);
@@ -73,6 +68,8 @@
             Console.WriteLine(e.Message);
             errorMessage = e.Message;
         }
-
     }
+
+  
+
 }

@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace SEP6.Authentication
 {
-    public class CustomAuthenticationStateProvider : ServerAuthenticationStateProvider
+    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly IJSRuntime jsonRuntime;
         private readonly IUserService serverData;
@@ -49,7 +49,7 @@ namespace SEP6.Authentication
             } 
             
 
-            ClaimsIdentity identity = new ClaimsIdentity();
+            ClaimsIdentity identity = new ClaimsIdentity("authorized");
             try
             {
                 People user1 = await serverData.LoginUser(name, Id);

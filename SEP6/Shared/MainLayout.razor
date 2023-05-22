@@ -1,4 +1,5 @@
-﻿@using SEP6.Authentication;
+﻿@page "/"
+@using SEP6.Authentication;
 @inherits LayoutComponentBase
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -9,25 +10,44 @@
 <div class="page">
     <div class="sidebar">
         <NavMenu />
+        <AuthorizeView>
+        <Authorized>
+            <button class="btn btn-primary" @onclick="PerformLogout">Logout</button>
+        </Authorized>
+        </AuthorizeView>
+        
     </div>
-
     <main>
         <div class="top-row px-4">
- <AuthorizeView>
-    <Authorized>
-        <button class="btn btn-primary" @onclick="Logout">Logout</button>
-    </Authorized>
-    </AuthorizeView>
         </div>
-
-        <article class="content px-4">
+        <div class="content">
             @Body
-        </article>
+        </div>
     </main>
 </div>
-
 @code {
-    private async Task Logout()
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private string authMessage = "The user is NOT authenticated.";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                NavgMan.NavigateTo("/");
+            }
+            else
+                NavgMan.NavigateTo("/login");
+        }
+    }
+ 
+    private async Task PerformLogout()
     {
         ((CustomAuthenticationStateProvider)AuthenticationStateProvider).Logout();
         NavgMan.NavigateTo("/");
