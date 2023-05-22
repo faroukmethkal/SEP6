@@ -33,4 +33,15 @@ public class RatingEntity {
         return movieEntity;
     }
 
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public void setVotes(int votes) {
+        this.votes = votes;
+    }
 }

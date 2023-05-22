@@ -2,7 +2,6 @@ package com.movie4u.sep.db.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 public class StarMovieKey implements Serializable {

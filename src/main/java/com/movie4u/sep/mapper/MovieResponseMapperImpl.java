@@ -24,8 +24,10 @@ public class MovieResponseMapperImpl implements MovieResponseMapper{
     }
 
     private Rating mapRating(MovieEntity movie) {
+        if (movie.getRatings() == null) return null;
         Rating rating = new Rating();
         var ratingEntity = movie.getRatings();
+        rating.setMovieId(ratingEntity.getMovieId());
         rating.setRating(ratingEntity.getRating());
         rating.setVotes(ratingEntity.getVotes());
 
@@ -35,6 +37,7 @@ public class MovieResponseMapperImpl implements MovieResponseMapper{
 
     private List<People> mapDirectors(MovieEntity movie) {
        List<People> peopleList = new ArrayList<>();
+        if (movie.getDirectors() == null) return null;
 
        for (var e: movie.getDirectors()){
            People p = new People();
@@ -50,6 +53,7 @@ public class MovieResponseMapperImpl implements MovieResponseMapper{
 
     private List<People> mapStars(MovieEntity movie) {
         List<People> peopleList = new ArrayList<>();
+        if (movie.getStars() == null) return null;
 
         for (var e: movie.getStars()){
             People p = new People();

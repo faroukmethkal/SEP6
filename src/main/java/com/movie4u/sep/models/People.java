@@ -1,5 +1,8 @@
 package com.movie4u.sep.models;
 
+import lombok.ToString;
+
+@ToString
 public class People {
     private int id;
     private String name;

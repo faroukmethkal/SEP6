@@ -22,4 +22,15 @@ public class PeopleEntity {
         return birth;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBirth(Long birth) {
+        this.birth = birth;
+    }
 }

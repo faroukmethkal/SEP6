@@ -2,12 +2,14 @@ package com.movie4u.sep.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 
 @JsonSerialize
 @Data
+@ToString
 public class Movie {
 
     private int id;

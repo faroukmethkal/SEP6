@@ -2,6 +2,7 @@ package com.movie4u.sep.db;
 
 
 import com.movie4u.sep.db.entity.MovieEntity;
+import com.movie4u.sep.db.entity.PeopleEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,4 +15,5 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<MovieEntity, Integer> {
 
     Optional<List<MovieEntity>> findByTitleContainingIgnoreCase(String title, Pageable pageRequest);
+    Optional<List<MovieEntity>> findByStarEntities(PeopleEntity star);
 }

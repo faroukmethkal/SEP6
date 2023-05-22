@@ -1,6 +1,8 @@
 package com.movie4u.sep.models;
 
+import lombok.ToString;
 
+@ToString
 public class Rating {
 
     private int movieId;
