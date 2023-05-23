@@ -10,34 +10,31 @@ namespace SEP6.Data
     public class MovieService : IMovieService
     {
         private HttpClient httpClient;
+        
 
-        public MovieService(HttpClient httpClient) { 
+        public MovieService(HttpClient httpClient)
+        {
             this.httpClient = httpClient;
         }
 
-        public async Task<Movies> IndexMovie(string title)
+        public async Task<List<Movies>> IndexMovie(string title)
         {
-            Movies movies = new Movies();
-            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/movies?title=";
+
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/movies";
             string encodedTitle = Uri.EscapeDataString(title);
             string url = $"{baseUrl}?title={encodedTitle}";
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+           
+            var response = await httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
 
 
-            var response = await httpClient.SendAsync(httpRequestMessage);
-            var responseStatusCode = response.StatusCode.ToString().ToLower();
-
-            if (responseStatusCode.Equals("ok"))
-            {
-                movies.title = title;
-                return movies;
-            }
-            else
-            {
-                throw new Exception(responseStatusCode);
-            }
+            List<Movies> moviesResult = JsonConvert.DeserializeObject<List<Movies>>(responseContent);
+            return moviesResult;
 
         }
+
 
         public async Task<OMDBResult> GetPosterForMovie(string title)
         {
@@ -53,9 +50,9 @@ namespace SEP6.Data
 
             var result = await response.Content.ReadAsStringAsync();
 
-            Console.WriteLine(result);
+
             OMDBResult moviesOMDBs = JsonConvert.DeserializeObject<OMDBResult>(result);
-            Console.WriteLine("deserialized" + moviesOMDBs.Search[0].Title);
+
             return moviesOMDBs;
         }
     }

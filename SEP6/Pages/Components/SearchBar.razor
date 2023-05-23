@@ -18,22 +18,16 @@
     </Authorized>
 </AuthorizeView>
 @code {
-
-    private string searchedMovie;
-    private string errorMessage;
+    [Parameter]
+    public string searchedMovie { get; set; }
+    public string errorMessage;
     //public MovieService movieService { get; set; }
     public Movies movies { get; set; }
 
     public async Task SearchMovies()
     {
-        try
-        {
-            movies = await movieService.IndexMovie(searchedMovie);
-        }
-        catch(Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+
+        NavigationManager.NavigateTo("/searchresults");
 
     }
 }

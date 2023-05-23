@@ -2,50 +2,54 @@
 @using SEP6.Data;
 @using SEP6.Models;
 @using SEP6.Pages.Components
+@inject IMovieService movieService;
+@inject NavigationManager navigation;
 
-<h3>SearchResults</h3>
+<h3>Search results</h3>
 
-@if (moviesList != null && moviesList.Search != null)
+@if (moviesList != null)
 {
-    <div class="container">
-        <div class="row">
-            @foreach (var movie in moviesList.Search)
-            {
-
+    @foreach (var movie in moviesList)
+    {
+        <div class="container">
+            <div class="row">
                 <div id="posters" class="col-md-4">
-                    <img src="@movie.Poster" class="img-fluid" />
                     <table class="table">
                         <div>
                             <tr>
-                                <th style="margin-right: 0;" class="card-text">@movie.Title</th>
+                                <th style="margin-right: 0;" class="card-text">@movie.Id</th>
                                 <th> - </th>
-                                <th class="card-text">@movie.Type</th>
-                                <th> - </th>
-                                <th class="card-text">@movie.Year</th>
+                                <th class="card-text">@movie.title</th>
+                            <th style="margin-right: 0;" class="card-text">@movie.year</th>
                             </tr>
                         </div>
                     </table>
                 </div>
-            }
+            </div>
         </div>
-    </div>
     }
+
+}
 @code {
-    public OMDBResult moviesList { get; set; }
-    public OMDBResult movieTitles { get; set; }
-    public MoviesOMDB moviesOMDB { get; set; }
-    public MovieService movieService { get; set; }
+
+    [Parameter]
+    //public string searchedMovie { get; set; }
+    public List<Movies> movies { get; set; }
+    public List<Movies> moviesList {get; set;}
+
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            string title = "The Room";
-            moviesList = await movieService.GetPosterForMovie(title);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
+            try
+            {
+                string searchedMovie = "lat";
+                moviesList = await movieService.IndexMovie(searchedMovie);
+
+                Console.WriteLine("GOING THROUGH THE GOD DAMN METHOD");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }   
 }
