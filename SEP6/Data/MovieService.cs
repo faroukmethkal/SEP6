@@ -18,7 +18,7 @@ namespace SEP6.Data
         public async Task<Movies> IndexMovie(string title)
         {
             Movies movies = new Movies();
-            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/movies";
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/movies?title=";
             string encodedTitle = Uri.EscapeDataString(title);
             string url = $"{baseUrl}?title={encodedTitle}";
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);

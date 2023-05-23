@@ -6,31 +6,70 @@
 @inject IMovieService movieService;
 
 <style>
-    #MoviesTitleIndex{
-        text-align:center;
+    #MoviesTitleIndex {
+        text-align: center;
+    }
+
+    .card {
+        height: 500px;
+        width: 300px;
+    }
+
+    #posters {
+        margin: auto;
+        margin-top: 15px;
+        height:500px;
+        width:300px;
+    }
+
+    .card-text {
+        margin: 0;
+        padding: 0;
+        padding-right: 0;
     }
 
 </style>
 
+<h3 id="MoviesTitleIndex">Movies</h3>
+
 @if (moviesList != null && moviesList.Search != null)
 {
-    @foreach (var movie in moviesList.Search)
-    {
-        <div class="card">
-            <img src="@movie.Poster" alt="Movie Poster" />
-            <div class="card-body">
-                <h5 class="card-title">@movie.Title</h5>
-                <p class="card-text">@movie.Type</p>
-            </div>
+    <div class="container">
+        <div class="row">
+            @foreach (var movie in moviesList.Search)
+            {
+
+                <div id="posters" class="col-md-4">
+                    <img src="@movie.Poster" class="img-fluid" />
+                    <table class="table">
+                        <div>
+                        <tr>
+                            <th style="margin-right: 0;" class="card-text">@movie.Title</th>
+                                <th> - </th>
+                            <th class="card-text">@movie.Type</th>
+                                <th> - </th>
+                            <th class="card-text">@movie.Year</th>
+                        </tr>
+                </div>
+                    </table>
+                </div>
+                @*  <div class="card">
+        <img src="@movie.Poster" alt="Movie Poster" />
+        <div class="card-body">
+        <h5 class="card-title">@movie.Title</h5>
+        <p class="card-text">@movie.Type</p>
         </div>
-    }
+        </div>*@
+            }
+        </div>
+    </div>
 }
 
-
 @code {
-    
+
     public OMDBResult moviesList { get; set; }
     public OMDBResult movieTitles { get; set; }
+    public MoviesOMDB moviesOMDB { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,7 +78,7 @@
             //string title = "shawshank";
             //movieTitles = await movieService.IndexMovie(title);
 
-            string title = "shaw";
+            string title = "The Room";
             moviesList = await movieService.GetPosterForMovie(title);
             // Use the movie data as needed
         }

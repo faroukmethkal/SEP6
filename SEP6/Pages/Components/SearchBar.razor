@@ -1,0 +1,39 @@
+﻿@page "/search"
+@namespace SearchComponent
+@inject IHttpClientFactory _clientFactory
+@inject NavigationManager NavigationManager
+@inject IMovieService movieService
+
+@using SEP6.Data;
+@using SEP6.Models
+
+
+<AuthorizeView>
+    <Authorized>
+<div class="search-container">
+    <input type="text" placeholder="Search.." @bind-value="searchedMovie" />
+    <div style="color:red">@errorMessage</div>
+    <button type="submit" @onclick="SearchMovies"><i class="">search</i></button>
+</div>
+    </Authorized>
+</AuthorizeView>
+@code {
+
+    private string searchedMovie;
+    private string errorMessage;
+    //public MovieService movieService { get; set; }
+    public Movies movies { get; set; }
+
+    public async Task SearchMovies()
+    {
+        try
+        {
+            movies = await movieService.IndexMovie(searchedMovie);
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
+    }
+}
