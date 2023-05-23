@@ -17,11 +17,11 @@ namespace SEP6.Data
             this.httpClient = httpClient;
         }
 
-        public async Task<List<Movies>> IndexMovie(string title)
+        public async Task<List<Movies>> IndexMovie(string searchedMovie)
         {
 
             string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/movies";
-            string encodedTitle = Uri.EscapeDataString(title);
+            string encodedTitle = Uri.EscapeDataString(searchedMovie);
             string url = $"{baseUrl}?title={encodedTitle}";
            
             var response = await httpClient.GetAsync(url);

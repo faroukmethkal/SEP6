@@ -4,6 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IMovieService movieService
 
+@using Newtonsoft.Json;
 @using SEP6.Data;
 @using SEP6.Models
 
@@ -12,7 +13,7 @@
     <Authorized>
 <div class="search-container">
     <input type="text" placeholder="Search.." @bind-value="searchedMovie" />
-    <div style="color:red">@errorMessage</div>
+ <div style="color:red">@errorMessage</div>
     <button type="submit" @onclick="SearchMovies"><i class="">search</i></button>
 </div>
     </Authorized>
@@ -21,13 +22,13 @@
     [Parameter]
     public string searchedMovie { get; set; }
     public string errorMessage;
-    //public MovieService movieService { get; set; }
     public Movies movies { get; set; }
+    public List<Movies> moviesList { get; set; }
 
     public async Task SearchMovies()
     {
-
-        NavigationManager.NavigateTo("/searchresults");
+        moviesList = await movieService.IndexMovie(searchedMovie);
+        NavigationManager.NavigateTo($"/searchresults?movies={Uri.EscapeDataString(JsonConvert.SerializeObject(moviesList))}");
 
     }
 }

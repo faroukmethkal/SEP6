@@ -17,7 +17,7 @@
     </div>
     <main>
         <div class="top-row">
-           <SearchComponent.SearchBar></SearchComponent.SearchBar>
+           <SearchComponent.SearchBar searchedMovie="@searchedMovie"></SearchComponent.SearchBar>
         </div>
         <div class="content">
             @Body
@@ -25,7 +25,8 @@
     </main>
 </div>
 @code {
-
+    [CascadingParameter (Name="searchedMovie")]
+    public string searchedMovie { get; set; }
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
