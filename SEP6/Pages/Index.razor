@@ -5,8 +5,12 @@
 @inject HttpClient httpClient
 @inject IMovieService movieService;
 
+<style>
+    #MoviesTitleIndex{
+        text-align:center;
+    }
 
-<h3>MOVIES</h3>
+</style>
 
 @if (moviesList != null && moviesList.Search != null)
 {
