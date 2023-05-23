@@ -6,6 +6,6 @@ namespace SEP6.Data
     {
 
         Task<Movies> IndexMovie(string title);
-        Task<Movies> GetPosterForMovie(string title);
+        Task<OMDBResult> GetPosterForMovie(string title);
     }
 }

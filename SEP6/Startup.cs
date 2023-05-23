@@ -21,6 +21,7 @@ namespace SEP6
             services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMovieService, MovieService>();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddHttpClient<IUserService, UserService>(client =>

@@ -3,41 +3,42 @@
 @using SEP6.Models;
 @using SEP6.Pages.Components
 @inject HttpClient httpClient
+@inject IMovieService movieService;
+
 
 <h3>MOVIES</h3>
 
 
-@foreach (var movie in moviesList)
+@*@foreach (var movie in moviesList.Search)
 {
     <div class="card">
-        <img src="@movie.ImageURL" alt="Movie Poster" />
+        <img src="@movie.Poster" alt="Movie Poster" />
         <div class="card-body">
-            <h5 class="card-title">@movie.title</h5>
-            @*<p class="card-text">@movie.Description</p>*@
+            <h5 class="card-title">@movie.Title</h5>
+            <p class="card-text">@movie.Type</p>
         </div>
     </div>
-}
+}*@
 
 @code {
-    private List<Movies> moviesList { get; set; }
-    private IMovieService movieService;
 
-    
+    private OMDBResult moviesList = new OMDBResult();
+    private OMDBResult movieTitles = new OMDBResult();
+
     protected override async Task OnInitializedAsync()
     {
-       
-        
+        try
+        {
+            //string title = "shawshank";
+            //movieTitles = await movieService.IndexMovie(title);
 
-        moviesList = moviesList.Search.Select(movie => new Movies
-            {
-                title = movie.title,
-                description = movie.description,
-                ImageURL = movie.ImageURL
-            }).ToList();
+            string title = "shaw";
+            moviesList = await movieService.GetPosterForMovie(title);
+            // Use the movie data as needed
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
-
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    Movies = await httpClient.GetFromJsonAsync<List<Movies>>("/movies");
-    //}
 }

@@ -11,6 +11,6 @@
         
         public string description { get; set; }
         public string ImageURL { get; set; }
-     //   public List<Movies> Search { get; set; }
+        public List<OMDBResult> Search { get; set; }
     }
 }
