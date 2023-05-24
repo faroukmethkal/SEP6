@@ -3,6 +3,7 @@
 @inject IHttpClientFactory _clientFactory
 @inject NavigationManager NavigationManager
 @inject IMovieService movieService
+@inject IJSRuntime JsRuntime
 
 @using Newtonsoft.Json;
 @using SEP6.Data;
@@ -25,10 +26,18 @@
     public Movies movies { get; set; }
     public List<Movies> moviesList { get; set; }
 
+    //public async Task SearchMovies()
+    //{
+    //    moviesList = await movieService.IndexMovie(searchedMovie);
+    //    NavigationManager.NavigateTo($"/searchresults?movies={Uri.EscapeDataString(JsonConvert.SerializeObject(moviesList))}");
+    //    Console.WriteLine("Went through searchMovies method");
+    //    StateHasChanged();
+    //}
+
     public async Task SearchMovies()
     {
         moviesList = await movieService.IndexMovie(searchedMovie);
-        NavigationManager.NavigateTo($"/searchresults?movies={Uri.EscapeDataString(JsonConvert.SerializeObject(moviesList))}");
-
+        var moviesJson = System.Web.HttpUtility.UrlEncode(JsonConvert.SerializeObject(moviesList));
+        NavigationManager.NavigateTo($"/searchresults?movies={moviesJson}");
     }
 }

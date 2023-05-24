@@ -23,10 +23,8 @@ namespace SEP6.Data
             string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/movies";
             string encodedTitle = Uri.EscapeDataString(searchedMovie);
             string url = $"{baseUrl}?title={encodedTitle}";
-           
             var response = await httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
-
             var responseContent = await response.Content.ReadAsStringAsync();
 
 
