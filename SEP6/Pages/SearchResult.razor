@@ -81,23 +81,35 @@
                             <strong>Id: </strong>@movie.Id
                         </div>
                         <div>
-                            @if(movie.rating != null)
-                            {
-                                <SfRating ShowTooltip="true" ItemsCount="10" Value="@movie.rating.rating"> </SfRating>
-                            }
+                            <SfRating ShowTooltip="true" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
                         </div>
                         <div>
-                            <strong>Votes: </strong>@movie.rating.votes
+                            <strong>Votes: </strong>@movie.rating?.votes
                         </div>
+                        @foreach (var director in movie.directors)
+                        {
+                            <div>
+                                <strong>Directors: </strong>
+                                @if(director.Name != null)
+                                {
+                                    @director.Name;
+                                }
+                            </div>
+                        }
                         <div>
-                            <strong>Directors: </strong>@foreach (var directors in directorsList)
+                            @foreach (var stars in movie.stars)
                             {
                                 <div>
-                                    directors.direct
+                                    <strong>Stars: </strong>
+                                    @if (stars.Name != null)
+                                    {
+                                        @stars.Name;
+                                        
+                                    }
                                 </div>
                             }
-                            {
                         </div>
+                        
                     </td>
                 </tr>
             }
