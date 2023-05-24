@@ -26,13 +26,6 @@
     public Movies movies { get; set; }
     public List<Movies> moviesList { get; set; }
 
-    //public async Task SearchMovies()
-    //{
-    //    moviesList = await movieService.IndexMovie(searchedMovie);
-    //    NavigationManager.NavigateTo($"/searchresults?movies={Uri.EscapeDataString(JsonConvert.SerializeObject(moviesList))}");
-    //    Console.WriteLine("Went through searchMovies method");
-    //    StateHasChanged();
-    //}
 
     public async Task SearchMovies()
     {

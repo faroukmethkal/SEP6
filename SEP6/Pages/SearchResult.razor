@@ -6,11 +6,13 @@
 @inject IMovieService movieService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs
 
 
 <h3>Search results</h3>
 
-@if (moviesList != null)
+@*@if (moviesList != null)
 {
     @foreach (var movie in moviesList)
     {
@@ -20,10 +22,11 @@
                     <table class="table">
                         <div>
                             <tr>
-                                <th style="margin-right: 0;" class="card-text">@movie.Id</th>
+                                <th style="margin-right: 0;" class="card-text">Id: @movie.Id</th>
                                 <th> - </th>
-                                <th class="card-text">@movie.title</th>
-                            <th style="margin-right: 0;" class="card-text">@movie.year</th>
+                                <th class="card-text">Title: @movie.title</th>
+                                <th> - </th>
+                            <th style="margin-right: 0;" class="card-text">Year: @movie.year</th>
                             </tr>
                         </div>
                     </table>
@@ -32,7 +35,76 @@
         </div>
     }
 
-}
+}*@
+<div class="container">
+    <table class="table">
+        <tbody>
+            @*@for (int i = 0; i < moviesList.Count; i += 3)
+            {
+                <tr>
+                    @for (int j = i; j < i + 3 && j < moviesList.Count; j++)
+                    {
+                        var movie = moviesList[j];
+                        <td>
+                            <div>
+                                <strong>Title: </strong>@movie.title
+                                
+                            </div>
+                            <div>
+                                <strong>Year: </strong>@movie.year
+                                
+                            </div>
+                            <div>
+                                <strong>Id: </strong>@movie.Id
+                            </div>
+                            <div>
+                                <SfRating Value="@movie.ratings"></SfRating>
+                            </div>
+                        </td>
+                    }
+                </tr>
+            }*@
+
+            @foreach (var movie in moviesList)
+            {
+                <tr>
+                    <td>
+                        <div>
+                            <strong>Title: </strong>@movie.title
+
+                        </div>
+                        <div>
+                            <strong>Year: </strong>@movie.year
+
+                        </div>
+                        <div>
+                            <strong>Id: </strong>@movie.Id
+                        </div>
+                        <div>
+                            @if(movie.rating != null)
+                            {
+                                <SfRating ShowTooltip="true" ItemsCount="10" Value="@movie.rating.rating"> </SfRating>
+                            }
+                        </div>
+                        <div>
+                            <strong>Votes: </strong>@movie.rating.votes
+                        </div>
+                        <div>
+                            <strong>Directors: </strong>@foreach (var directors in directorsList)
+                            {
+                                <div>
+                                    directors.direct
+                                </div>
+                            }
+                            {
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
 @code {
 
     [Parameter]
@@ -40,6 +112,8 @@
     public List<Movies> movies { get; set; }
     [Parameter]
     public List<Movies> moviesList { get; set; }
+    [Parameter]
+    public List<Movies> directorsList { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {

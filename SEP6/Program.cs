@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using SEP6;
 using SEP6.Authentication;
 using SEP6.Data;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
+builder.Services.AddSyncfusionBlazor();
 
 
 
