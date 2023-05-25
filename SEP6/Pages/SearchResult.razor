@@ -12,14 +12,26 @@
 
 <h3>Search results</h3>
 
+<style>
 
+    .e-rating-container.custom-font .e-rating-item-list:hover .e-rating-item-container .e-rating-icon,
+    .e-rating-container.custom-font .e-rating-item-container .e-rating-icon {
+        /* To change rated symbol fill color and un-rated symbol fill color */
+        background: linear-gradient(to right, #ffe814 var(--rating-value), #d8d7d4 var(--rating-value));
+        background-clip: text;
+        -webkit-background-clip: text;
+    }
+
+</style>
 <div class="container">
     <table class="table">
         <tbody>
 
+
             @foreach (var movie in moviesList)
             {
                 <tr>
+                    <img src="@movie.Poster" class="img-fluid" />
                     <td>
                         <div>
                             <strong>Title: </strong>@movie.title
@@ -31,9 +43,6 @@
                         </div>
                         <div>
                             <strong>Id: </strong>@movie.Id
-                        </div>
-                        <div>
-                            <SfRating ShowTooltip="true" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
                         </div>
                         <div>
                             <strong>Votes: </strong>@movie.rating?.votes
@@ -57,7 +66,7 @@
                                 <strong>Stars: </strong>
                                 @if (movie.directors != null)
                                 {
-                                    @foreach (var stars in movie.stars)
+                                    @foreach (var stars in movie?.stars)
                                     {
 
                                         @stars.Name
@@ -72,7 +81,10 @@
                                 }
                             </div>
                         </div>
-                        
+                        <div>
+                            <SfRating CssClass="custom-font" ShowLabel="true" ShowTooltip="true" Precision="PrecisionType.Exact" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
+                        </div>
+                        <button id="AddToFavoriteButton" class="btn btn-primary" >Add To Favorites List</button>
                     </td>
                 </tr>
             }
@@ -88,7 +100,8 @@
     [Parameter]
     public List<Movies> moviesList { get; set; }
     [Parameter]
-    public List<Movies> directorsList { get; set; }
+    public List<MoviesOMDB> Posters { get; set; }
+    public List<Movies> favorited { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -96,6 +109,9 @@
         var uri = new Uri(NavigationManager.Uri);
         var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
         moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
+
+        //Posters = await movieService.GetPosterForMovie(title);
+
         await base.OnParametersSetAsync();
     }
 
@@ -137,5 +153,10 @@
     {
         NavigationManager.LocationChanged -= HandleLocationChanged;
     }
-    
+
+    public async Task AddToFavorites(Movies movie)
+    {
+        favorited.Add(movie);
+    }
+
 }

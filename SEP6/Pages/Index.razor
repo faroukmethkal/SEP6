@@ -72,7 +72,7 @@
             //movieTitles = await movieService.IndexMovie(title);
 
             string title = "The Room";
-            moviesList = await movieService.GetPosterForMovie(title);
+            moviesList = await movieService.GetMoviesFromOMDb(title);
             // Use the movie data as needed
         }
         catch (Exception ex)

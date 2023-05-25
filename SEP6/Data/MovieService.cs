@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SEP6.Models;
+using Syncfusion.Blazor.Inputs;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
@@ -29,12 +30,27 @@ namespace SEP6.Data
 
 
             List<Movies> moviesResult = JsonConvert.DeserializeObject<List<Movies>>(responseContent);
+
+            foreach (var movie in moviesResult.Where(x => !String.IsNullOrEmpty(x.title)))
+            {
+                var omdbResult = await GetMoviesFromOMDb(movie.title);
+                var omdbMovieMatch = omdbResult.Search
+                    .Where(x => int.Parse(x.ImdbID.Replace("t","")) == movie.Id)
+                    .FirstOrDefault();
+
+                if (omdbMovieMatch != null)
+                {
+                    movie.Type = omdbMovieMatch.Type;
+                    movie.Poster = omdbMovieMatch.Poster;
+                }
+            }
+
             return moviesResult;
 
         }
 
 
-        public async Task<OMDBResult> GetPosterForMovie(string title)
+        public async Task<OMDBResult> GetMoviesFromOMDb(string title)
         {
             string baseUrl = "http://www.omdbapi.com/";
             string apiKey = "c04f487";
@@ -47,11 +63,49 @@ namespace SEP6.Data
 
 
             var result = await response.Content.ReadAsStringAsync();
+            var listOfMovieResults = JsonConvert.DeserializeObject<OMDBResult>(result);
 
-
-            OMDBResult moviesOMDBs = JsonConvert.DeserializeObject<OMDBResult>(result);
-
-            return moviesOMDBs;
+            return listOfMovieResults;
         }
+
+
+        //public async Task<OMDBResult> GetMoviesFromOMDb(string title)
+        //{
+        //    string baseUrl = "http://www.omdbapi.com/";
+        //    string apiKey = "c04f487";
+
+        //    string encodedTitle = Uri.EscapeDataString(title);
+        //    string url = $"{baseUrl}?s={encodedTitle}&apikey={apiKey}";
+
+        //    var response = await httpClient.GetAsync(url);
+        //    response.EnsureSuccessStatusCode();
+
+
+        //    var result = await response.Content.ReadAsStringAsync();
+        //    var listOfMovieResults = JsonConvert.DeserializeObject<OMDBResult>(result);
+
+        //    return listOfMovieResults.Search.Where(x => x.Title.Equals(title)).FirstOrDefault();
+        //}
+
+        //public async Task<List<MoviesOMDB>> GetOMDbPosters(string imdbId)
+        //{
+        //    var apiUrl = $"http://www.omdbapi.com/?i={imdbId}&apikey=c04f487";
+
+        //    // Make the HTTP GET request
+        //    var response = await httpClient.GetAsync(apiUrl);
+
+        //    // Check if the request was successful
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        var content = await response.Content.ReadAsStringAsync();
+        //        List<MoviesOMDB> = JsonConvert.DeserializeObject<List<MoviesOMDB>>(content);
+
+        //        return omdbResult;
+        //    }
+
+        //    // Handle the case when the request was not successful
+        //    // For example, you could throw an exception or return null
+        //    return null;
+        //}
     }
 }

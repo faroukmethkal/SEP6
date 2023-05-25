@@ -9,6 +9,8 @@
         public List<Directors> directors { get; set; }
         public List<Stars> stars { get; set; }       
         public int birth { get; set; }
+        public string? Poster { get; set; }
+        public string? Type { get; set; }
 
     }
 }

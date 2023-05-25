@@ -14,8 +14,8 @@
     <Authorized>
 <div class="search-container">
     <input type="text" placeholder="Search.." @bind-value="searchedMovie" />
- <div style="color:red">@errorMessage</div>
-    <button type="submit" @onclick="SearchMovies"><i class="">search</i></button>
+            <button type="submit" @onclick="SearchMovies"><i>search</i></button>
+            <div style="color:red">@errorMessage</div>
 </div>
     </Authorized>
 </AuthorizeView>
@@ -25,11 +25,15 @@
     public string errorMessage;
     public Movies movies { get; set; }
     public List<Movies> moviesList { get; set; }
+    public OMDBResult posters { get; set; }
 
 
     public async Task SearchMovies()
     {
         moviesList = await movieService.IndexMovie(searchedMovie);
+        var movieIds = moviesList.Select(movie => movie.Id).ToList();
+        //posters = await movieService.GetOMDbPosters(movieIds);
+
         var moviesJson = System.Web.HttpUtility.UrlEncode(JsonConvert.SerializeObject(moviesList));
         NavigationManager.NavigateTo($"/searchresults?movies={moviesJson}");
     }

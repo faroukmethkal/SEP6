@@ -6,6 +6,7 @@ namespace SEP6.Data
     public class UserService : IUserService
     {
        private HttpClient client;
+       User user;
 
         public UserService(HttpClient client)
         {

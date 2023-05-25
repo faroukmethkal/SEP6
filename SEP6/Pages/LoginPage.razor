@@ -8,6 +8,7 @@
 @using SEP6.Authentication;
 @using SEP6.Data;
 
+
 <style>
     .container {
         display: flex;
@@ -44,8 +45,8 @@
     </div>
 
     <div class="form-group px-4">
-        <label for="id">ID:</label>
-        <input id="id" class="form-control" @bind="@id" />
+        <label for="id">Password:</label>
+        <input type="password" id="myInput" class="form-control"  @bind="@password" />
     </div>
 
     <div class="bottom-row px-4">
@@ -60,16 +61,16 @@
 <p>@errorMessage</p>
 
 @code {
-    private string name;
-    private int id;
-    private string errorMessage;
+    private string? name;
+    private int password;
+    private string? errorMessage;
 
 
     private async Task Login()
     {
         try
         {
-            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateLogin(name, id);
+            await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateLogin(name, password);
             Console.WriteLine("Entering Login method");
             NavgMan.NavigateTo("/index");
         }
@@ -79,7 +80,6 @@
             errorMessage = e.Message;
         }
     }
-
   
 
 }
