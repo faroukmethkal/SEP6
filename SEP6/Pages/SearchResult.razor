@@ -12,58 +12,10 @@
 
 <h3>Search results</h3>
 
-@*@if (moviesList != null)
-{
-    @foreach (var movie in moviesList)
-    {
-        <div class="container">
-            <div class="row">
-                <div id="posters" class="col-md-4">
-                    <table class="table">
-                        <div>
-                            <tr>
-                                <th style="margin-right: 0;" class="card-text">Id: @movie.Id</th>
-                                <th> - </th>
-                                <th class="card-text">Title: @movie.title</th>
-                                <th> - </th>
-                            <th style="margin-right: 0;" class="card-text">Year: @movie.year</th>
-                            </tr>
-                        </div>
-                    </table>
-                </div>
-            </div>
-        </div>
-    }
 
-}*@
 <div class="container">
     <table class="table">
         <tbody>
-            @*@for (int i = 0; i < moviesList.Count; i += 3)
-            {
-                <tr>
-                    @for (int j = i; j < i + 3 && j < moviesList.Count; j++)
-                    {
-                        var movie = moviesList[j];
-                        <td>
-                            <div>
-                                <strong>Title: </strong>@movie.title
-                                
-                            </div>
-                            <div>
-                                <strong>Year: </strong>@movie.year
-                                
-                            </div>
-                            <div>
-                                <strong>Id: </strong>@movie.Id
-                            </div>
-                            <div>
-                                <SfRating Value="@movie.ratings"></SfRating>
-                            </div>
-                        </td>
-                    }
-                </tr>
-            }*@
 
             @foreach (var movie in moviesList)
             {
@@ -86,8 +38,11 @@
                         <div>
                             <strong>Votes: </strong>@movie.rating?.votes
                         </div>
+                        @if (movie.directors != null)
+                        {
                         @foreach (var director in movie.directors)
                         {
+                          
                             <div>
                                 <strong>Directors: </strong>
                                 @if(director.Name != null)
@@ -96,18 +51,26 @@
                                 }
                             </div>
                         }
+                        }
                         <div>
-                            @foreach (var stars in movie.stars)
-                            {
-                                <div>
-                                    <strong>Stars: </strong>
-                                    @if (stars.Name != null)
+                            <div>
+                                <strong>Stars: </strong>
+                                @if (movie.directors != null)
+                                {
+                                    @foreach (var stars in movie.stars)
                                     {
-                                        @stars.Name;
-                                        
+
+                                        @stars.Name
+                                        if (!stars.Equals(movie.stars.Last()))
+                                        {
+                                            @(
+                                                                        ", "
+                                                                        )
+                                            ;
+                                        }
                                     }
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
                         
                     </td>
@@ -141,15 +104,32 @@
         if (firstRender)
         {
             NavigationManager.LocationChanged += HandleLocationChanged;
-            HandleLocationChanged(null, new LocationChangedEventArgs(NavigationManager.Uri, false));
+            HandleLocationChanged(null, new LocationChangedEventArgs(NavigationManager.Uri, true));
         }
     }
+
+    //private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+    //{
+    //    var uri = new Uri(NavigationManager.Uri);
+    //    var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
+    //    moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
+    //    StateHasChanged();
+    //}
 
     private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
     {
         var uri = new Uri(NavigationManager.Uri);
         var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
-        moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
+
+        if (!string.IsNullOrEmpty(moviesJson))
+        {
+            moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
+        }
+        else
+        {
+            moviesList = new List<Movies>();
+        }
+
         StateHasChanged();
     }
 
@@ -157,22 +137,5 @@
     {
         NavigationManager.LocationChanged -= HandleLocationChanged;
     }
-
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    Console.WriteLine("Initializing Search Result");
-    //    var uri = new Uri(uriHelper.Uri);
-    //    var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
-    //    moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
-
-    //}   
-    //protected override async Task OnParametersSetAsync()
-    //{
-    //    Console.WriteLine("Initializing Search Result");
-    //    var uri = new Uri(uriHelper.Uri);
-    //    var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
-    //    moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
-    //    await base.OnParametersSetAsync();
-    //}
     
 }
