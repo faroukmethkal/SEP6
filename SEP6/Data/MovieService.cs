@@ -30,7 +30,7 @@ namespace SEP6.Data
 
 
             List<Movies> moviesResult = JsonConvert.DeserializeObject<List<Movies>>(responseContent);
-
+            if(moviesResult != null ) { 
             foreach (var movie in moviesResult.Where(x => !String.IsNullOrEmpty(x.title)))
             {
                 var omdbResult = await GetMoviesFromOMDb(movie.title);
@@ -43,6 +43,7 @@ namespace SEP6.Data
                     movie.Type = omdbMovieMatch.Type;
                     movie.Poster = omdbMovieMatch.Poster;
                 }
+            }
             }
 
             return moviesResult;
