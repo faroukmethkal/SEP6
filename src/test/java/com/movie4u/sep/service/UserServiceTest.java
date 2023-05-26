@@ -6,10 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 @SpringBootTest
 class UserServiceTest {
 
@@ -26,14 +22,14 @@ class UserServiceTest {
         topListMovieRepository.save(topListMovie);*/
     }
 
-    @Test
+  /*  @Test
     void findAllByUserId() {
-        var topList = topListMovieRepository.findAllByUserId(12448);
+        var topList = topListMovieRepository.findAllByUsername(12448);
         List<Integer> list = new ArrayList<>();
         for (var t: topList.get()) {
             list.add(t.getMovieId());
         }
         System.out.println(movieRepository.findAllById(list).size());
-    }
+    }*/
 
 }

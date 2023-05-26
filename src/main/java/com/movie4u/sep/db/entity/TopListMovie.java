@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "top_list_movie",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"movie_id", "user_id"})
+                @UniqueConstraint(columnNames = {"movie_id", "username"})
         })
 public class TopListMovie {
 
@@ -16,8 +16,8 @@ public class TopListMovie {
     @Column(name = "movie_id")
     private Integer movieId;
 
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "username")
+    private String username;
 
     public Long getId() {
         return id;
@@ -35,11 +35,11 @@ public class TopListMovie {
         this.movieId = movieId;
     }
 
-    public int getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPeopleId(int UserId) {
-        this.userId = UserId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

@@ -5,9 +5,12 @@ import com.movie4u.sep.db.MovieRepository;
 import com.movie4u.sep.db.PeopleRepository;
 
 import com.movie4u.sep.db.TopListMovieRepository;
+import com.movie4u.sep.db.UserRepository;
 import com.movie4u.sep.db.entity.TopListMovie;
+import com.movie4u.sep.db.entity.User;
 import com.movie4u.sep.mapper.MovieResponseMapper;
 import com.movie4u.sep.models.Movie;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,33 +25,46 @@ public class UserService {
 
     private MovieRepository movieRepository;
     private TopListMovieRepository topListMovieRepository;
-
-    @Autowired
+    private UserRepository userRepository;
     private MovieResponseMapper mapper;
 
     @Autowired
     public UserService(PeopleRepository peopleRepository,
                        MovieRepository movieRepository,
-                       TopListMovieRepository topListMovieRepository) {
+                       TopListMovieRepository topListMovieRepository, UserRepository userRepository, MovieResponseMapper mapper) {
         this.peopleRepository = peopleRepository;
         this.movieRepository = movieRepository;
         this.topListMovieRepository = topListMovieRepository;
+        this.userRepository = userRepository;
+        this.mapper = mapper;
     }
 
-    public boolean login(String username, int id) {
-        var user = peopleRepository.findById(id);
+    public boolean login(String username, String password) {
+        var user = userRepository.findUserByUsername(username);
 
-        return user.filter(peopleEntity -> (username.contains(peopleEntity.getName()))).isPresent();
+        return user.filter(user1 -> user1.getPassword().equals(password)).isPresent();
 
     }
+    public ResponseEntity<String> register(User user) {
 
-    public ResponseEntity<String> addToTopList(Integer movieId, Integer userId) {
-        boolean userExist = peopleRepository.existsById(userId);
+        try {
+            userRepository.save(user);
+            ResponseEntity.ok("Resister user");
+        } catch (Exception  e) {
+            e.printStackTrace();
+           return ResponseEntity.badRequest().body("Couldn't Register check Username maybe it already exist");
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    public ResponseEntity<String> addToTopList(Integer movieId, String username) {
+        var userExist = userRepository.findUserByUsername(username);
         boolean movieExist = movieRepository.existsById(movieId);
-        if (userExist && movieExist) {
+        if (userExist.isPresent() && movieExist) {
             TopListMovie topListMovie = new TopListMovie();
             topListMovie.setMovieId(movieId);
-            topListMovie.setPeopleId(userId);
+            topListMovie.setUsername(username);
             try {
                 topListMovieRepository.save(topListMovie);
             } catch (Exception e) {
@@ -60,9 +76,9 @@ public class UserService {
         }
     }
 
-    public List<Movie> getTopListMovie(int userId) {
+    public List<Movie> getTopListMovie(String username) {
 
-        var topList = topListMovieRepository.findAllByUserId(userId);
+        var topList = topListMovieRepository.findAllByUsername(username);
 
         List<Integer> listId = new ArrayList<>();
         for (var t : topList.get()) {
