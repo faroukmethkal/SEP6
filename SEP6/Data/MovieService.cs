@@ -30,20 +30,53 @@ namespace SEP6.Data
 
 
             List<Movies> moviesResult = JsonConvert.DeserializeObject<List<Movies>>(responseContent);
-            if(moviesResult != null ) { 
-            foreach (var movie in moviesResult.Where(x => !String.IsNullOrEmpty(x.title)))
-            {
-                var omdbResult = await GetMoviesFromOMDb(movie.title);
-                var omdbMovieMatch = omdbResult.Search
-                    .Where(x => int.Parse(x.ImdbID.Replace("t","")) == movie.Id)
-                    .FirstOrDefault();
+            //if (moviesResult != null)
+            //{
+            //    foreach (var movie in moviesResult.Where(x => !String.IsNullOrEmpty(x.title)))
+            //    {
+            //        Console.WriteLine($"Processing movie: {movie.title}");
+            //        var omdbResult = await GetMoviesFromOMDb(movie.title);
+            //        var omdbMovieMatch = omdbResult.Search
+            //            .Where(x => int.Parse(x.ImdbID.Replace("t", "")) == movie.Id)
+            //            .FirstOrDefault();
 
-                if (omdbMovieMatch != null)
+            //        if (omdbMovieMatch != null)
+            //        {
+            //            movie.Type = omdbMovieMatch.Type;
+            //            movie.Poster = omdbMovieMatch.Poster;
+            //        }
+            //    }
+            //}
+
+            //return moviesResult;
+
+            if (moviesResult != null)
+            {
+                foreach (var movie in moviesResult.Where(x => !String.IsNullOrEmpty(x.title)))
                 {
-                    movie.Type = omdbMovieMatch.Type;
-                    movie.Poster = omdbMovieMatch.Poster;
+                    Console.WriteLine($"Processing movie: {movie.title}");
+                    var omdbResult = await GetMoviesFromOMDb(movie.title);
+
+                    if (omdbResult != null && omdbResult.Search != null)
+                    {
+                        var omdbMovieMatch = omdbResult.Search
+                            .Where(x => int.Parse(x.ImdbID.Replace("t", "")) == movie.Id)
+                            .FirstOrDefault();
+
+                        if (omdbMovieMatch != null)
+                        {
+                            movie.Type = omdbMovieMatch.Type;
+                            movie.Poster = omdbMovieMatch.Poster;
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"No OMDB result or search results for movie: {movie.title}");
+
+                        movie.Type = "Unknown";
+                        movie.Poster = "default-poster.jpg";
+                    }
                 }
-            }
             }
 
             return moviesResult;
