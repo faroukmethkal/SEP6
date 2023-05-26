@@ -48,7 +48,7 @@ else
         <button type="submit" class="btn btn-primary custom-btn" @onclick="Register">Register</button>
         </div>
         <div>
-        <button type="submit" class="btn btn-primary custom-btn" @onclick="Login">Login</button>
+        <button type="submit" class="btn btn-primary custom-btn" @onclick="GoBack">Go back</button>
         </div>
 
     </form>
@@ -84,8 +84,8 @@ else
             registrationSuccess = false;
         }
     }
-    private void Login()
+    private void GoBack()
     {
-        NavigationManager.NavigateTo("/login");
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 }
