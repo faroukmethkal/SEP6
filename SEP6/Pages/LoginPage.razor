@@ -33,6 +33,11 @@
     p{
         color:darkred;
     }
+
+    .custom-btn {
+        width: 200px;
+        margin-top: 15px;
+    }
 </style>
 
 
@@ -57,9 +62,12 @@
         <div class="spacer"></div> <!-- Spacer to push the login button below -->
         <AuthorizeView>
             <NotAuthorized>
-                <button class="btn btn-primary px-4 m-4" @onclick="Login">Login</button>
-                <button class="btn btn-primary px-4 m-4" @onclick="GoBack">Go Back</button>
-                
+                <div>
+                <button class="btn btn-primary custom-btn" @onclick="Login">Login</button>
+                </div>
+                <div>
+                <button class="btn btn-primary custom-btn" @onclick="GoBack">Go Back</button>
+                </div>
             </NotAuthorized>
         </AuthorizeView>
 
