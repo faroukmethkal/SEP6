@@ -4,6 +4,8 @@ namespace SEP6.Data
 {
     public interface IUserService
     {
-        Task<People> LoginUser(string name, int Id);
+        Task<User> LoginUser(string name, string password);
+        Task<User> RegisterUser(string name, string userPassword);
+        Task<User> PostFavoriteMovies(string username, int movieId);
     }
 }

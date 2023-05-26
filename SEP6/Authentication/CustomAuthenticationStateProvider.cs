@@ -12,7 +12,7 @@ namespace SEP6.Authentication
     {
         private readonly IJSRuntime jsonRuntime;
         private readonly IUserService serverData;
-        private People cachedUser;
+        private User cachedUser;
 
         public CustomAuthenticationStateProvider(IJSRuntime jsonRuntime, IUserService serverData)
         {
@@ -28,8 +28,8 @@ namespace SEP6.Authentication
                 string userAsJson = await jsonRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
                 if (!string.IsNullOrEmpty(userAsJson))
                 {
-                    People tmp = JsonConvert.DeserializeObject<People>(userAsJson);
-                    await ValidateLogin(tmp.name, tmp.Id);
+                    User tmp = JsonConvert.DeserializeObject<User>(userAsJson);
+                    await ValidateLogin(tmp.Name, tmp.Password);
                 }
             }
 
@@ -37,22 +37,22 @@ namespace SEP6.Authentication
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
  
-        public async Task ValidateLogin(string name, int Id)
+        public async Task ValidateLogin(string name, string password)
         {
             if (string.IsNullOrEmpty(name))
             {
                 throw new Exception("Enter name");
             }
-            else if (Id == null)
+            else if (string.IsNullOrEmpty(password))
             {
-                throw new Exception("Enter Id");
+                throw new Exception("Enter password");
             } 
             
 
             ClaimsIdentity identity = new ClaimsIdentity("authorized");
             try
             {
-                People user1 = await serverData.LoginUser(name, Id);
+                User user1 = await serverData.LoginUser(name, password);
 
                 string serialisedData = JsonConvert.SerializeObject(user1);
                 await jsonRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);

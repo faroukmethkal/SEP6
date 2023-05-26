@@ -1,5 +1,7 @@
 ﻿@page "/register"
+@using SEP6.Data;
 @inject NavigationManager NavigationManager
+@inject IUserService userService
 
 
 <style>
@@ -57,13 +59,24 @@ else
     private string confirmPassword;
     private bool registrationSuccess;
 
-    private void Register()
+    private async Task Register()
     {
         // Perform registration logic here
         if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password) && password == confirmPassword)
         {
             // Registration successful
+            try
+            {
+                await userService.RegisterUser(username, password);
+                Console.WriteLine("Entering Login method");
+                NavigationManager.NavigateTo("/index");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
             registrationSuccess = true;
+
         }
         else
         {

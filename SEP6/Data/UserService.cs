@@ -1,6 +1,8 @@
 ﻿using SEP6.Models;
 using System.Net.Http.Headers;
 using System.Xml.Linq;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace SEP6.Data
 {
@@ -15,17 +17,17 @@ namespace SEP6.Data
  
         }
 
-        public async Task<People> LoginUser(string name, int Id)
+        public async Task<User> LoginUser(string name, string password)
         {
-            People people = new People();
+            User user = new User();
 
-            Console.WriteLine("Entering UserService");
+            Console.WriteLine("Entering LoginUser");
             string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/login";
             string username = name;
-            int userId = Id;
+            string userPassword = password;
 
             string encodedUsername = Uri.EscapeDataString(username);
-            string url = $"{baseUrl}?username={encodedUsername}&userId={userId}";
+            string url = $"{baseUrl}?username={encodedUsername}&password={userPassword}";
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url);
             
             
@@ -36,9 +38,9 @@ namespace SEP6.Data
 
             if (responseStatusCode.Equals("ok"))
             {
-                people.name = name;
-                people.Id = Id;
-                return people;
+                user.Name = name;
+                user.Password = password;
+                return user;
             }
             else
             {
@@ -46,35 +48,71 @@ namespace SEP6.Data
             }
             
         }
-        public async Task<User> PostFavoriteMovies(string username, int movieId)
+        public async Task<User> RegisterUser(string name, string userPassword)
         {
             User user = new User();
 
-            Console.WriteLine("Entering UserService");
-            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/login";
+            Console.WriteLine("Entering RegisterUser");
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/register";
+            
+
+            // Create a JSON object with the user's name and password
+            var requestBody = new { username = name, password = userPassword };
+            var jsonRequest = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            using (HttpClient client = new HttpClient())
+            {
+                // Send a POST request to the register endpoint
+                var response = await client.PostAsync(baseUrl, content);
+                var responseStatusCode = response.StatusCode.ToString().ToLower();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    user.Name = name;
+                    user.Password = userPassword;
+                    return user;
+                }
+                else
+                {
+                    throw new Exception(responseStatusCode);
+                }
+            }
+        }
+
+        public async Task<User> PostFavoriteMovies(string username, int movieId)
+        {
+            User user = new User();
+            Movies movie = new Movies();
+
+            Console.WriteLine("Entering PostFavoriteMovies");
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
             string name = username;
-            int id = movieId;
 
             string encodedUsername = Uri.EscapeDataString(username);
-            string url = $"{baseUrl}?username={encodedUsername}&userId={id}";
+            string url = $"{baseUrl}?username={encodedUsername}&movieId={movieId}";
             HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url);
 
+            using (HttpClient client = new HttpClient())
+            {
+                var response = await client.SendAsync(httpRequestMessage);
+                var responseStatusCode = response.StatusCode.ToString().ToLower();
 
+                if (responseStatusCode.Equals("ok"))
+                {
+                    user.Name = name;
+                    movie.Id = movieId;
 
+                    // Add the movie to the user's favorite movies list
+                    user.Favorites.Add(movie);
 
-            var response = await client.SendAsync(httpRequestMessage);
-            var responseStatusCode = response.StatusCode.ToString().ToLower();
-
-            //if (responseStatusCode.Equals("ok"))
-            //{
-            //    people.name = name;
-            //    people.Id = Id;
-            //    return people;
-            //}
-            //else
-            //{
-            //    throw new Exception(responseStatusCode);
-            //}
+                    return user;
+                }
+                else
+                {
+                    throw new Exception(responseStatusCode);
+                }
+            }
         }
     }
 }
