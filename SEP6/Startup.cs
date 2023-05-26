@@ -22,6 +22,7 @@ namespace SEP6
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMovieService, MovieService>();
+            services.AddHttpContextAccessor();
 
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddHttpClient<IUserService, UserService>(client =>

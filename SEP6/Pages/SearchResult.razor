@@ -2,12 +2,18 @@
 @using Newtonsoft.Json;
 @using SEP6.Data;
 @using SEP6.Models;
-@using SEP6.Pages.Components
 @inject IMovieService movieService
+@inject IUserService userService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IHttpContextAccessor HttpContextAccessor
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Inputs
+@using System.Security.Claims
+@using SEP6.Authentication;
+@using System.Security.Claims
+
 
 
 <h3>Search results</h3>
@@ -23,93 +29,104 @@
     }
 
 </style>
-<div class="container">
-    <table class="table">
-        <tbody>
+<AuthorizeView>
+    <Authorized>
+        <div class="container">
+            <table class="table">
+                <tbody>
 
 
-            @foreach (var movie in moviesList)
-            {
-                <tr>
-                    @if(movie.Poster != "N/A") {
-                        <img src="@movie.Poster" class="img-fluid" />
-                    }else
+                    @foreach (var movie in moviesList)
                     {
-                        <img src="~/img/poster-holder.jpg"/>
-                    }
-                    <td>
-                        <div>
-                            <strong>Title: </strong>@movie.title
+                        <tr>
+                            @if (movie.Poster != "N/A")
+                            {
+                                <img src="@movie.Poster" class="img-fluid" />
+                            }
+                            else
+                            {
+                                <img src="~/img/poster-holder.jpg" />
+                            }
+                            <td>
+                                <div>
+                                    <strong>Title: </strong>@movie.title
 
-                        </div>
-                        <div>
-                            <strong>Year: </strong>@movie.year
+                                </div>
+                                <div>
+                                    <strong>Year: </strong>@movie.year
 
-                        </div>
-                        <div>
-                            <strong>Id: </strong>@movie.Id
-                        </div>
-                        <div>
-                            <strong>Votes: </strong>@movie.rating?.votes
-                        </div>
-                        @if (movie.directors != null)
-                        {
-                        @foreach (var director in movie.directors)
-                        {
-                          
-                            <div>
-                                <strong>Directors: </strong>
-                                @if(director.Name != null)
-                                {
-                                    @director.Name;
-                                }
-                            </div>
-                        }
-                        }
-                        <div>
-                            <div>
-                                <strong>Stars: </strong>
+                                </div>
+                                <div>
+                                    <strong>Id: </strong>@movie.Id
+                                </div>
+                                <div>
+                                    <strong>Votes: </strong>@movie.rating?.votes
+                                </div>
                                 @if (movie.directors != null)
                                 {
-                                    if (movie.stars != null && movie.stars.Any())
-                                    {
-                                    @foreach (var stars in movie.stars)
+                                    @foreach (var director in movie.directors)
                                     {
 
-                                        @stars.Name
-                                        if (!stars.Equals(movie.stars.Last()))
-                                        {
-                                            @(
-                                                                        ", "
-                                                                        )
-                                            ;
-                                        }
-                                    }
+                                        <div>
+                                            <strong>Directors: </strong>
+                                            @if (director.Name != null)
+                                            {
+                                                @director.Name
+                                                ;
+                                            }
+                                        </div>
                                     }
                                 }
-                            </div>
-                        </div>
-                        <div>
-                            <SfRating CssClass="custom-font" ShowLabel="true" ShowTooltip="true" Precision="PrecisionType.Exact" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
-                        </div>
-                        <button id="AddToFavoriteButton" class="btn btn-primary" >Add To Favorites List</button>
-                    </td>
-                </tr>
-            }
+                                <div>
+                                    <div>
+                                        <strong>Stars: </strong>
+                                        @if (movie.directors != null)
+                                        {
+                                            if (movie.stars != null && movie.stars.Any())
+                                            {
+                                                @foreach (var stars in movie.stars)
+                                                {
 
-        </tbody>
-    </table>
-</div>
+                                                    @stars.Name
+                                                    if (!stars.Equals(movie.stars.Last()))
+                                                    {
+                                                        @(
+                                                            ", "
+                                                            )
+                                                        ;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div>
+                                    <SfRating CssClass="custom-font" ShowLabel="true" ShowTooltip="true" Precision="PrecisionType.Exact" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
+                                </div>
+                                <button id="AddToFavoriteButton" @onclick="() => AddToFavorites(movie.Id)" class="btn btn-primary">Add To Favorites List</button>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
 @code {
 
     [Parameter]
     public string searchedMovie { get; set; }
-    public List<Movies> movies { get; set; }
+    public Movies movies { get; set; }
     [Parameter]
     public List<Movies> moviesList { get; set; }
     [Parameter]
     public List<MoviesOMDB> Posters { get; set; }
-    public List<Movies> favorited { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    public CustomAuthenticationStateProvider customAuthenticationStateProvider { get; set; }
+
 
     protected override async Task OnParametersSetAsync()
     {
@@ -132,13 +149,6 @@
         }
     }
 
-    //private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
-    //{
-    //    var uri = new Uri(NavigationManager.Uri);
-    //    var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
-    //    moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
-    //    StateHasChanged();
-    //}
 
     private void HandleLocationChanged(object sender, LocationChangedEventArgs args)
     {
@@ -162,9 +172,19 @@
         NavigationManager.LocationChanged -= HandleLocationChanged;
     }
 
-    public async Task AddToFavorites(Movies movie)
+    public async Task AddToFavorites(int movieId)
     {
-        favorited.Add(movie);
+        //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //var user = authState.User;
+
+        var principal = HttpContextAccessor.HttpContext.User;
+        var loggedInUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+ 
+            Console.WriteLine("Adding to favorites");
+           // var userName = user.Identity.Name;
+            await userService.PostFavoriteMovies(loggedInUserId, movieId);
+
+
     }
 
 }

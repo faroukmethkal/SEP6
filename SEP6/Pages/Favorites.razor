@@ -1,5 +1,113 @@
 ﻿@page "/favorites"
+@using Newtonsoft.Json;
+@using SEP6.Data;
+@using SEP6.Models;
+@inject IUserService IuserService
+@inject IMovieService movieService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Inputs
 
+
+@*<div class="container">
+    <table class="table">
+        <tbody>
+
+
+            @foreach (var movie in userFavorites.Favorites)
+            {
+                <tr>
+                    @if(movie.Poster != "N/A") {
+                        <img src="@movie.Poster" class="img-fluid" />
+                    }else
+                    {
+                        <img src="~/img/poster-holder.jpg"/>
+                    }
+                    <td>
+                        <div>
+                            <strong>Title: </strong>@movie.title
+
+                        </div>
+                        <div>
+                            <strong>Year: </strong>@movie.year
+
+                        </div>
+                        <div>
+                            <strong>Id: </strong>@movie.Id
+                        </div>
+                        <div>
+                            <strong>Votes: </strong>@movie.rating?.votes
+                        </div>
+                        @if (movie.directors != null)
+                        {
+                        @foreach (var director in movie.directors)
+                        {
+                          
+                            <div>
+                                <strong>Directors: </strong>
+                                @if(director.Name != null)
+                                {
+                                    @director.Name;
+                                }
+                            </div>
+                        }
+                        }
+                        <div>
+                            <div>
+                                <strong>Stars: </strong>
+                                @if (movie.directors != null)
+                                {
+                                    if (movie.stars != null && movie.stars.Any())
+                                    {
+                                    @foreach (var stars in movie.stars)
+                                    {
+
+                                        @stars.Name
+                                        if (!stars.Equals(movie.stars.Last()))
+                                        {
+                                            @(
+                                                                        ", "
+                                                                        )
+                                            ;
+                                        }
+                                    }
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <SfRating CssClass="custom-font" ShowLabel="true" ShowTooltip="true" Precision="PrecisionType.Exact" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
+                        </div>
+                        <button id="AddToFavoriteButton" class="btn btn-primary" >Add To Favorites List</button>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
 @code {
 
+    [Parameter]
+    public List<Movies> movies { get; set; }
+    [Parameter]
+    public List<Movies> moviesList { get; set; }
+    [Parameter]
+    public List<MoviesOMDB> Posters { get; set; }
+    [Parameter]
+    public User userFavorites { get; set; }
+    public Movies movie { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Retrieve the user's favorite movies from the userService
+        //string username = userService.user?.Name;
+        //int movieId =  // Replace with the actual movie ID
+
+        //if (username != null)
+        //{
+        //    userFavorites = await userService.PostFavoriteMovies(username, movieId);
+        //}
+    }*@
 }

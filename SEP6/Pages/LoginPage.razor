@@ -3,10 +3,11 @@
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavgMan
-@inject IUserService _serviceUser;
+@inject IUserService IuserService;
 @using System.Net.Http;
 @using SEP6.Authentication;
 @using SEP6.Data;
+@using SEP6.Models;
 
 
 <style>
@@ -70,7 +71,7 @@
     private string? name;
     private string? password;
     private string errorMessage;
-
+   
 
     private async Task Login()
     {
@@ -78,6 +79,7 @@
         {
             await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).ValidateLogin(name, password);
             Console.WriteLine("Entering Login method");
+            
             NavgMan.NavigateTo("/index");
         }
         catch (Exception e)
