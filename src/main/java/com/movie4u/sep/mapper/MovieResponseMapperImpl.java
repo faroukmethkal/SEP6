@@ -13,6 +13,7 @@ import java.util.List;
 public class MovieResponseMapperImpl implements MovieResponseMapper{
     @Override
     public Movie map(MovieEntity movieEntity) {
+        if(movieEntity == null) return null;
         Movie movie = new Movie();
         movie.setId(movieEntity.getId());
         movie.setTitle(movieEntity.getTitle());
@@ -40,14 +41,15 @@ public class MovieResponseMapperImpl implements MovieResponseMapper{
         if (movie.getDirectors() == null) return null;
 
        for (var e: movie.getDirectors()){
+           if (e != null && e.getDirector() != null){
            People p = new People();
            p.setId(e.getDirector().getId());
            p.setName(e.getDirector().getName());
            p.setBirth(e.getDirector().getBirth());
            peopleList.add(p);
-       }
+       }}
 
-       return peopleList;
+       return peopleList.isEmpty() ? null : peopleList;
     }
 
 
@@ -55,15 +57,17 @@ public class MovieResponseMapperImpl implements MovieResponseMapper{
         List<People> peopleList = new ArrayList<>();
         if (movie.getStars() == null) return null;
 
-        for (var e: movie.getStars()){
-            People p = new People();
-            p.setId(e.getStar().getId());
-            p.setName(e.getStar().getName());
-            p.setBirth(e.getStar().getBirth());
-            peopleList.add(p);
+        for (var s: movie.getStars()) {
+            if (s != null && s.getStar() != null) {
+                People p = new People();
+                p.setId(s.getStar().getId());
+                p.setName(s.getStar().getName());
+                p.setBirth(s.getStar().getBirth());
+                peopleList.add(p);
+            }
         }
 
-        return peopleList;
+        return peopleList.isEmpty() ? null : peopleList;
     }
 
 }

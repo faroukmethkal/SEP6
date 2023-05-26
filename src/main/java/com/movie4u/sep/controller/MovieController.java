@@ -3,6 +3,7 @@ package com.movie4u.sep.controller;
 import com.movie4u.sep.models.Movie;
 import com.movie4u.sep.models.People;
 import com.movie4u.sep.models.Rating;
+import com.movie4u.sep.models.RatingStatistics;
 import com.movie4u.sep.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,12 @@ public class MovieController {
               return ResponseEntity.ok(movieService.findMovieByTitle(title));
     }
 
+    @GetMapping("/movie")
+    public ResponseEntity<Movie> findMovieById(@RequestParam(required = true) int id) {
+
+        return movieService.findMovieById(id);
+    }
+
     @PostMapping("/ratings/star")
     public ResponseEntity<List<Rating>> getAllRatingByStar(@RequestBody People star) {
        return movieService.getAllRatingByStar(star);
@@ -32,4 +39,11 @@ public class MovieController {
     public ResponseEntity<List<Rating>> getAllRatingByStarName(@RequestParam(required = true) String name) {
         return movieService.getAllRatingByStarName(name);
     }
+
+    @GetMapping("/ratings/year")
+    public ResponseEntity<List<RatingStatistics>> getAllRatingByStarName(@RequestParam(required = true) Long startYear, Long endYear) {
+
+        return movieService.getAllRatingByYear(startYear, endYear);
+    }
+
 }
