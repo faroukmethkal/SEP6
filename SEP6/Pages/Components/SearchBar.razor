@@ -32,8 +32,6 @@
     {
         moviesList = await movieService.IndexMovie(searchedMovie);
         var movieIds = moviesList.Select(movie => movie.Id).ToList();
-        //posters = await movieService.GetOMDbPosters(movieIds);
-
         var moviesJson = System.Web.HttpUtility.UrlEncode(JsonConvert.SerializeObject(moviesList));
         NavigationManager.NavigateTo($"/searchresults?movies={moviesJson}");
     }

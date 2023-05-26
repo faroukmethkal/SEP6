@@ -1,0 +1,78 @@
+﻿@page "/register"
+@inject NavigationManager NavigationManager
+
+
+<style>
+
+    .registration-form{
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    .registration-title{
+        text-align:center;
+        margin-bottom:100px;
+    }
+
+    .custom-btn {
+        width: 200px;
+        margin-top: 15px;
+    }
+</style>
+@if (registrationSuccess)
+{
+    <p>Registration successful!</p>
+}
+else
+{
+    <form class="registration-form">
+        <h3 class="registration-title">Registration</h3>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control form-control-sm" id="username" @bind="@username" style="width: 200px;">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control form-control-sm" id="password" @bind="@password" style="width: 200px;">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" class="form-control form-control-sm" id="confirmPassword" @bind="@confirmPassword" style="width: 200px;">
+        </div>
+        <div>
+        <button type="submit" class="btn btn-primary custom-btn" @onclick="Register">Register</button>
+        </div>
+        <div>
+        <button type="submit" class="btn btn-primary custom-btn" @onclick="Login">Login</button>
+        </div>
+
+    </form>
+}
+@code {
+    private string username;
+    private string password;
+    private string confirmPassword;
+    private bool registrationSuccess;
+
+    private void Register()
+    {
+        // Perform registration logic here
+        if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password) && password == confirmPassword)
+        {
+            // Registration successful
+            registrationSuccess = true;
+        }
+        else
+        {
+            // Registration failed
+            registrationSuccess = false;
+        }
+    }
+    private void Login()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+}

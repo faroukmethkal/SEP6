@@ -1,0 +1,36 @@
+﻿@page "/landingpage"
+@inject NavigationManager NavigationManager
+
+<style>
+    .buttons-container{
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left:50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%); 
+    }
+
+
+
+</style>
+<div class="buttons-container">
+<h1 >Movies4U</h1>
+<div >
+    <button class="btn btn-primary" @onclick="GoToLogin">Login</button>
+    <button class="btn btn-primary" @onclick="GoToRegister">Register</button>
+</div>
+</div>
+@code {
+    private void GoToLogin()
+    {
+        // Navigate to the login page
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private void GoToRegister()
+    {
+        // Navigate to the register page
+        NavigationManager.NavigateTo("/register");
+    }
+}

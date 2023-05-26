@@ -8,7 +8,7 @@
         public string? Password { get; set; }
         public string? EmailConfirmed { get; set; }
         public string? PasswordConfirmed { get; set; }
-        public List<Movies> favorites { get; set; }
+        public List<Movies> Favorites { get; set; }
 
     }
 }
