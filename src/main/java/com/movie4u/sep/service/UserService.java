@@ -78,7 +78,7 @@ public class UserService {
 
     public List<Movie> getTopListMovie(String username) {
 
-        var topList = topListMovieRepository.findAllByUsername(username);
+        var topList = topListMovieRepository.findAllByUsername(username.trim());
 
         List<Integer> listId = new ArrayList<>();
         for (var t : topList.get()) {

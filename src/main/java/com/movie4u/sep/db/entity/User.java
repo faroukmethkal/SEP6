@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "registered_user", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int Id;
     private String username;
     private String password;
