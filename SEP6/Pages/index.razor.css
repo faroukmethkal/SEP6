@@ -1,0 +1,53 @@
+﻿#MoviesTitleIndex {
+    text-align: center;
+}
+
+.poster-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+.poster-image {
+    width: 80%;
+    height: 450px;
+}
+
+.movie-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80%;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.movie-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.movie-details {
+    margin-top: 5px;
+}
+
+@media (min-width: 576px) {
+    .poster-container {
+        margin-bottom: 15px;
+    }
+}
+
+@media (min-width: 768px) {
+    .movie-info {
+        padding: 15px;
+        font-size: 16px;
+    }
+
+    .movie-title {
+        font-size: 18px;
+    }
+}
+.favorite-button {
+    border-radius: 6px;
+   
+}
