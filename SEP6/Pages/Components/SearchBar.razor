@@ -9,12 +9,20 @@
 @using SEP6.Data;
 @using SEP6.Models
 
+<style>
+    .search-input{
+        border-radius:6px;
+    }
+    .search-button{
+        border-radius: 6px;
+    }
+</style>
 
 <AuthorizeView>
     <Authorized>
 <div class="search-container">
-            <input type="text" placeholder="Search.." @bind-value="searchedMovie" @onkeyup="HandleKeyUp" />
-            <button type="submit" @onclick="SearchMovies"><i>search</i></button>
+            <input class="search-input" type="text" placeholder="Search.." @bind-value="searchedMovie" @onkeyup="HandleKeyUp" />
+            <button type="submit" class="search-button" @onclick="SearchMovies"><i>search</i></button>
             <div style="color:red">@errorMessage</div>
 </div>
     </Authorized>

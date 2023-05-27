@@ -1,33 +1,12 @@
 ﻿@page "/index"
+@using Newtonsoft.Json;
 @using SEP6.Data;
 @using SEP6.Models;
+@using System.Globalization;
 @inject HttpClient httpClient
-@inject IMovieService movieService;
-
-<style>
-    #MoviesTitleIndex {
-        text-align: center;
-    }
-
-    .card {
-        height: 500px;
-        width: 300px;
-    }
-
-    #posters {
-        margin: auto;
-        margin-top: 15px;
-        height:500px;
-        width:300px;
-    }
-
-    .card-text {
-        margin: 0;
-        padding: 0;
-        padding-right: 0;
-    }
-
-</style>
+@inject IMovieService movieService
+@inject IUserService userService
+@inject IJSRuntime JSRuntime
 
 <h3 id="MoviesTitleIndex">Movies</h3>
 
@@ -37,31 +16,28 @@
         <div class="row">
             @foreach (var movie in moviesList.Search)
             {
-
-                <div id="posters" class="col-md-4">
-                    <img src="@movie.Poster" class="img-fluid" />
-                    <table class="table">
-                        <div>
-                        <tr>
-                            <th style="margin-right: 0;" class="card-text">@movie.Title</th>
-                                <th> - </th>
-                            <th class="card-text">@movie.Type</th>
-                                <th> - </th>
-                            <th class="card-text">@movie.Year</th>
-                        </tr>
-                </div>
-                    </table>
+                <div class="col-md-4">
+                    <div class="poster-container">
+                        <img src="@movie.Poster" class="poster-image" />
+                        <div class="movie-info">
+                            <div class="movie-title">@movie.Title</div>
+                            <div class="movie-details">
+                                <span class="movie-type">@textInfo.ToTitleCase(movie.Type)</span> - <span class="movie-year">@movie.Year</span>
+                                <button id="AddToFavoriteButton" @onclick="() => AddToFavorites(movie.ImdbID)" class="fa fa-heart"> Add</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
     </div>
 }
-
 @code {
 
     public OMDBResult moviesList { get; set; }
     public OMDBResult movieTitles { get; set; }
     public MoviesOMDB moviesOMDB { get; set; }
+    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,5 +54,23 @@
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+        public async Task AddToFavorites(string movieId)
+    {
+        int intMovieId = int.Parse(movieId);
+        var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+     
+
+        var user = JsonConvert.DeserializeObject<User>(serializedUser);
+        var username = user.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
+            Console.WriteLine("Adding to favorites");
+            await userService.PostFavoriteMovies(username, intMovieId);
+        }
+
+        
     }
 }
