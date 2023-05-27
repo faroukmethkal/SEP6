@@ -6,9 +6,6 @@
 @inject IUserService userService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject AuthenticationStateProvider GetAuthenticationStateAsync
-@inject IHttpContextAccessor HttpContextAccessor
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Inputs
 @using System.Security.Claims
@@ -124,10 +121,8 @@
     public List<Movies> moviesList { get; set; }
     [Parameter]
     public List<MoviesOMDB> Posters { get; set; }
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-    public CustomAuthenticationStateProvider customAuthenticationStateProvider { get; set; }
-    private readonly IJSRuntime jsonRuntime;
+  
+    
     
 
 
