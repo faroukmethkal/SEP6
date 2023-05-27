@@ -84,6 +84,7 @@ namespace SEP6.Data
         {
             User user = new User();
             Movies movie = new Movies();
+            user.Favorites = new List<Movies>();
 
             Console.WriteLine("Entering PostFavoriteMovies");
             string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
