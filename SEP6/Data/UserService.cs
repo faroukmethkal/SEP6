@@ -77,73 +77,74 @@ namespace SEP6.Data
             }
         }
 
-        public async Task<User> PostFavoriteMovies(string username, int movieId)
-        {
-            User user = new User();
-            Movies movie = new Movies();
-            user.Favorites = new List<Movies>();
+        //public async Task<User> PostFavoriteMovies(string username, int movieId)
+        //{
+        //    User user = new User();
+        //    Movies movie = new Movies();
+        //    user.Favorites = new List<Movies>();
 
-            Console.WriteLine("Entering PostFavoriteMovies");
-            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
-            string name = username;
+        //    Console.WriteLine("Entering PostFavoriteMovies");
+        //    string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
+        //    string name = username;
 
-            string encodedUsername = Uri.EscapeDataString(username);
-            string url = $"{baseUrl}?username={encodedUsername}&movieId={movieId}";
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+        //    string encodedUsername = Uri.EscapeDataString(username);
+        //    string url = $"{baseUrl}?username={encodedUsername}&movieId={movieId}";
+        //    HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url);
 
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.SendAsync(httpRequestMessage);
-                var responseStatusCode = response.StatusCode.ToString().ToLower();
+        //    using (HttpClient client = new HttpClient())
+        //    {
+        //        var response = await client.SendAsync(httpRequestMessage);
+        //        var responseStatusCode = response.StatusCode.ToString().ToLower();
 
-                if (responseStatusCode.Equals("ok"))
-                {
-                    user.Name = name;
-                    movie.Id = movieId;
+        //        if (responseStatusCode.Equals("ok"))
+        //        {
+        //            user.Name = name;
+        //            movie.Id = movieId;
 
-                    // Add the movie to the user's favorite movies list
-                    user.Favorites.Add(movie);
+        //            // Add the movie to the user's favorite movies list
+        //            user.Favorites.Add(movie);
 
-                    return user;
-                }
-                else
-                {
-                    throw new Exception(responseStatusCode);
-                }
-            }
-        }
+        //            return user;
+        //        }
+        //        else
+        //        {
+        //            throw new Exception(responseStatusCode);
+        //        }
+        //    }
+        //}
 
-        public async Task<User> GetFavoriteMovies(string username)
-        {
-            User user = new User();
+        //public async Task<User> GetFavoriteMovies(string username)
+        //{
+        //    User user = new User();
 
-            Console.WriteLine("Entering GetFavoriteMovies");
-            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
-            string name = username;
+        //    Console.WriteLine("Entering GetFavoriteMovies");
+        //    string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
+        //    string name = username;
 
-            string encodedUsername = Uri.EscapeDataString(username);
-            string url = $"{baseUrl}?username={encodedUsername}";
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+        //    string encodedUsername = Uri.EscapeDataString(username);
+        //    string url = $"{baseUrl}?username={encodedUsername}";
+        //    HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
 
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.SendAsync(httpRequestMessage);
-                var responseStatusCode = response.StatusCode.ToString().ToLower();
+        //    using (HttpClient client = new HttpClient())
+        //    {
+        //        var response = await client.SendAsync(httpRequestMessage);
+        //        var responseStatusCode = response.StatusCode.ToString().ToLower();
 
-                if (responseStatusCode.Equals("ok"))
-                {
-                    user.Name = name;
 
-                    // Retrieve the list of favorite movies
-                    user.Favorites = await response.Content.ReadFromJsonAsync<List<Movies>>();
 
-                    return user;
-                }
-                else
-                {
-                    throw new Exception(responseStatusCode);
-                }
-            }
-        }
+        //        if (responseStatusCode.Equals("ok"))
+        //        {
+        //            user.Name = name;
+
+        //            user.Favorites = await response.Content.ReadFromJsonAsync<List<Movies>>();
+
+        //            return user;
+        //        }
+        //        else
+        //        {
+        //            throw new Exception(responseStatusCode);
+        //        }
+        //    }
+        //}
     }
 }

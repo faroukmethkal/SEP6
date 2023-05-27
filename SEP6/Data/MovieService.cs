@@ -84,6 +84,97 @@ namespace SEP6.Data
             return listOfMovieResults;
         }
 
+        public async Task<User> GetFavoriteMovies(string username)
+        {
+            User user = new User();
+            Console.WriteLine("Entering GetFavoriteMovies");
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
+            string name = username;
+
+            string encodedUsername = Uri.EscapeDataString(username);
+            string url = $"{baseUrl}?username={encodedUsername}";
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+            using (HttpClient client = new HttpClient())
+            {
+                var response = await client.SendAsync(httpRequestMessage);
+                var responseStatusCode = response.StatusCode.ToString().ToLower();
+
+                if (responseStatusCode.Equals("ok"))
+                {
+                    user.Name = name;
+
+                    // Retrieve the list of favorite movies
+                    user.Favorites = await response.Content.ReadFromJsonAsync<List<Movies>>();
+
+                    foreach (var movie in user.Favorites.Where(x => !String.IsNullOrEmpty(x.title)))
+                    {
+                        Console.WriteLine($"Processing movie: {movie.title}");
+                        var omdbResult = await GetMoviesFromOMDb(movie.title);
+
+                        if (omdbResult != null && omdbResult.Search != null)
+                        {
+                            var omdbMovieMatch = omdbResult.Search
+                                .Where(x => int.Parse(x.ImdbID.Replace("t", "")) == movie.Id)
+                                .FirstOrDefault();
+
+                            if (omdbMovieMatch != null)
+                            {
+                                movie.Poster = omdbMovieMatch.Poster;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No OMDB result or search results for movie: {movie.title}");
+
+                            movie.Type = "Unknown";
+                            movie.Poster = "default-poster.jpg";
+                        }
+                    }
+                    return user;
+                }
+                else
+                {
+                    throw new Exception(responseStatusCode);
+                }
+            }
+        }
+
+        public async Task<User> PostFavoriteMovies(string username, int movieId)
+        {
+            User user = new User();
+            Movies movie = new Movies();
+            user.Favorites = new List<Movies>();
+
+            Console.WriteLine("Entering PostFavoriteMovies");
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
+            string name = username;
+
+            string encodedUsername = Uri.EscapeDataString(username);
+            string url = $"{baseUrl}?username={encodedUsername}&movieId={movieId}";
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, url);
+
+            using (HttpClient client = new HttpClient())
+            {
+                var response = await client.SendAsync(httpRequestMessage);
+                var responseStatusCode = response.StatusCode.ToString().ToLower();
+
+                if (responseStatusCode.Equals("ok"))
+                {
+                    user.Name = name;
+                    movie.Id = movieId;
+
+                    // Add the movie to the user's favorite movies list
+                    user.Favorites.Add(movie);
+
+                    return user;
+                }
+                else
+                {
+                    throw new Exception(responseStatusCode);
+                }
+            }
+        }
 
         //public async Task<OMDBResult> GetMoviesFromOMDb(string title)
         //{

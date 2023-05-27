@@ -109,7 +109,7 @@
 
         if (username != null)
         {
-            userFavorites = await userService.GetFavoriteMovies(username);
+            userFavorites = await movieService.GetFavoriteMovies(username);
         }
     }
 }

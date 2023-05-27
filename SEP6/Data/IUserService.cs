@@ -6,7 +6,7 @@ namespace SEP6.Data
     {
         Task<User> LoginUser(string name, string password);
         Task<User> RegisterUser(string name, string userPassword);
-        Task<User> PostFavoriteMovies(string username, int movieId);
-        Task<User> GetFavoriteMovies(string username);
+        //Task<User> PostFavoriteMovies(string username, int movieId);
+        //Task<User> GetFavoriteMovies(string username);
     }
 }

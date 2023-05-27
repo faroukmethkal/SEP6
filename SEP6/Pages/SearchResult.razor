@@ -181,7 +181,7 @@
         if (!string.IsNullOrEmpty(username))
         {
             Console.WriteLine("Adding to favorites");
-            await userService.PostFavoriteMovies(username, movieId);
+            await movieService.PostFavoriteMovies(username, movieId);
         }
     }
 
