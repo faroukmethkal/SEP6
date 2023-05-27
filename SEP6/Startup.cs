@@ -18,6 +18,9 @@ namespace SEP6
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
+            services.AddScoped<CustomAuthenticationStateProvider>();
+            services.AddScoped<AuthenticationStateProvider>(p =>
+                            p.GetRequiredService<CustomAuthenticationStateProvider>());
             services.AddBlazoredLocalStorage(config => config.JsonSerializerOptions.WriteIndented = true);
 
             services.AddScoped<IUserService, UserService>();

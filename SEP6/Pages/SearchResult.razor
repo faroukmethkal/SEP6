@@ -7,12 +7,13 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
 @inject IHttpContextAccessor HttpContextAccessor
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Inputs
 @using System.Security.Claims
 @using SEP6.Authentication;
-@using System.Security.Claims
+
 
 
 
@@ -126,6 +127,8 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     public CustomAuthenticationStateProvider customAuthenticationStateProvider { get; set; }
+    private readonly IJSRuntime jsonRuntime;
+    
 
 
     protected override async Task OnParametersSetAsync()
@@ -174,17 +177,19 @@
 
     public async Task AddToFavorites(int movieId)
     {
-        //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        //var user = authState.User;
+        var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+     
 
-        var principal = HttpContextAccessor.HttpContext.User;
-        var loggedInUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
- 
+        var user = JsonConvert.DeserializeObject<User>(serializedUser);
+        var username = user.Name;
+
+        if (!string.IsNullOrEmpty(username))
+        {
             Console.WriteLine("Adding to favorites");
-           // var userName = user.Identity.Name;
-            await userService.PostFavoriteMovies(loggedInUserId, movieId);
+            await userService.PostFavoriteMovies(username, movieId);
+        }
 
-
+        
     }
 
 }

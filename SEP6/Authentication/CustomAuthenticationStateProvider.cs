@@ -37,11 +37,6 @@ namespace SEP6.Authentication
             return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
         }
 
-        public string GiveUsername()
-        {
-            return cachedUser.Name;
-        }
-
         public async Task ValidateLogin(string name, string password)
         {
             if (string.IsNullOrEmpty(name))
