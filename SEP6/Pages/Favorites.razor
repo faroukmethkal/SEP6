@@ -2,7 +2,7 @@
 @using Newtonsoft.Json;
 @using SEP6.Data;
 @using SEP6.Models;
-@inject IUserService IuserService
+@inject IUserService userService
 @inject IMovieService movieService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
@@ -10,11 +10,12 @@
 @using Syncfusion.Blazor.Inputs
 
 
-@*<div class="container">
+<div class="container">
     <table class="table">
         <tbody>
 
-
+            @if (userFavorites != null && userFavorites.Favorites != null)
+            {
             @foreach (var movie in userFavorites.Favorites)
             {
                 <tr>
@@ -83,10 +84,11 @@
                     </td>
                 </tr>
             }
-
+            }
         </tbody>
     </table>
 </div>
+
 @code {
 
     [Parameter]
@@ -95,19 +97,19 @@
     public List<Movies> moviesList { get; set; }
     [Parameter]
     public List<MoviesOMDB> Posters { get; set; }
-    [Parameter]
-    public User userFavorites { get; set; }
     public Movies movie { get; set; }
+
+    public User userFavorites { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // Retrieve the user's favorite movies from the userService
-        //string username = userService.user?.Name;
-        //int movieId =  // Replace with the actual movie ID
+        var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+        var user = JsonConvert.DeserializeObject<User>(serializedUser);
+        var username = user.Name;
 
-        //if (username != null)
-        //{
-        //    userFavorites = await userService.PostFavoriteMovies(username, movieId);
-        //}
-    }*@
+        if (username != null)
+        {
+            userFavorites = await userService.GetFavoriteMovies(username);
+        }
+    }
 }

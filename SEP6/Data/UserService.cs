@@ -55,15 +55,12 @@ namespace SEP6.Data
             Console.WriteLine("Entering RegisterUser");
             string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/register";
             
-
-            // Create a JSON object with the user's name and password
             var requestBody = new { username = name, password = userPassword };
             var jsonRequest = JsonConvert.SerializeObject(requestBody);
             var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
             using (HttpClient client = new HttpClient())
             {
-                // Send a POST request to the register endpoint
                 var response = await client.PostAsync(baseUrl, content);
                 var responseStatusCode = response.StatusCode.ToString().ToLower();
 
@@ -106,6 +103,39 @@ namespace SEP6.Data
 
                     // Add the movie to the user's favorite movies list
                     user.Favorites.Add(movie);
+
+                    return user;
+                }
+                else
+                {
+                    throw new Exception(responseStatusCode);
+                }
+            }
+        }
+
+        public async Task<User> GetFavoriteMovies(string username)
+        {
+            User user = new User();
+
+            Console.WriteLine("Entering GetFavoriteMovies");
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
+            string name = username;
+
+            string encodedUsername = Uri.EscapeDataString(username);
+            string url = $"{baseUrl}?username={encodedUsername}";
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
+
+            using (HttpClient client = new HttpClient())
+            {
+                var response = await client.SendAsync(httpRequestMessage);
+                var responseStatusCode = response.StatusCode.ToString().ToLower();
+
+                if (responseStatusCode.Equals("ok"))
+                {
+                    user.Name = name;
+
+                    // Retrieve the list of favorite movies
+                    user.Favorites = await response.Content.ReadFromJsonAsync<List<Movies>>();
 
                     return user;
                 }
