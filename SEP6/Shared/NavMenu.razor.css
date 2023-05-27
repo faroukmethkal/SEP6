@@ -9,6 +9,10 @@
 
 .navbar-brand {
     font-size: 1.1rem;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .oi {
@@ -19,7 +23,7 @@
 }
 
 .nav-item {
-    font-size: 0.9rem;
+    font-size: 1rem;
     padding-bottom: 0.5rem;
 }
 
@@ -59,4 +63,16 @@
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+.navbar-logo {
+    max-width: 20%;
+    max-height: 20%;
+    margin-right: 5%;
+    margin-bottom: 10px;
+}
+
+.logo-title-container {
+    display: flex;
+    align-items: center;
+    flex: 2;
 }

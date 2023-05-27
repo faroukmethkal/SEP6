@@ -13,7 +13,7 @@
 <AuthorizeView>
     <Authorized>
 <div class="search-container">
-    <input type="text" placeholder="Search.." @bind-value="searchedMovie" />
+            <input type="text" placeholder="Search.." @bind-value="searchedMovie" @onkeyup="HandleKeyUp" />
             <button type="submit" @onclick="SearchMovies"><i>search</i></button>
             <div style="color:red">@errorMessage</div>
 </div>
@@ -34,5 +34,13 @@
         var movieIds = moviesList.Select(movie => movie.Id).ToList();
         var moviesJson = System.Web.HttpUtility.UrlEncode(JsonConvert.SerializeObject(moviesList));
         NavigationManager.NavigateTo($"/searchresults?movies={moviesJson}");
+    }
+
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SearchMovies();
+        }
     }
 }
