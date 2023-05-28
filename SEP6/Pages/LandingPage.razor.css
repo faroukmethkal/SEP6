@@ -1,12 +1,46 @@
-﻿.buttons-container {
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+﻿.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #3a0647;
+}
+
+.image-container {
+    margin-top: 2rem;
+}
+
+.landing-page-logo {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 20rem;
 }
 
 .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.2rem;
     background-image: linear-gradient(to right, rgb(0, 191, 255) 0%, #3a0647 70%);
+    color: white;
+    border-radius: 0.25rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 0.5rem;
 }
+
+    .btn:hover {
+        background-image: linear-gradient(to right, rgb(0, 150, 200) 0%, #2d053c 70%);
+    }

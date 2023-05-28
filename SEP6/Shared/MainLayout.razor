@@ -1,14 +1,14 @@
 ﻿@using SEP6.Authentication;
 @inherits LayoutComponentBase
-@inject NavigationManager navigationManager
+@inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager NavgMan
 @using System.Security.Claims
 @using Blazored.Toast.Configuration
 
 <PageTitle>Movies4U</PageTitle>
 
 <div class="page">
+    
     <div class="sidebar">
         <NavMenu />
         <AuthorizeView>
@@ -18,9 +18,13 @@
         </AuthorizeView>
     </div>
     <main>
+        <AuthorizeView>
+            <Authorized>
         <div class="top-row">
            <SearchComponent.SearchBar searchedMovie="@searchedMovie"></SearchComponent.SearchBar>
         </div>
+        </Authorized>
+    </AuthorizeView>
         <div class="content">
             @Body
         </div>
@@ -33,6 +37,8 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
+
+
     protected override async Task OnInitializedAsync()
     {
         if (authenticationState is not null)
@@ -42,17 +48,17 @@
 
             if (user?.Identity is not null && user.Identity.IsAuthenticated)
             {
-                NavgMan.NavigateTo("/index");
+                NavigationManager.NavigateTo("/index");
             }
             else
-                NavgMan.NavigateTo("/landingpage");
+                NavigationManager.NavigateTo("/landingpage");
         }
     }
  
     private async Task PerformLogout()
     {
         ((CustomAuthenticationStateProvider)AuthenticationStateProvider).Logout();
-        NavgMan.NavigateTo("/");
+        NavigationManager.NavigateTo("/");
     }
 }
 

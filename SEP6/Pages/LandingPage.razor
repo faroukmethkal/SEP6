@@ -1,12 +1,19 @@
 ﻿@page "/landingpage"
 @inject NavigationManager NavigationManager
 
-<div class="buttons-container">
-<h1 >Movies4U</h1>
-<div >
-    <button class="btn btn-primary" @onclick="GoToLogin">Login</button>
-    <button class="btn btn-primary" @onclick="GoToRegister">Register</button>
-</div>
+
+
+<div class="container">
+    <img src="/img/favpng_movie-logo.png" class="landing-page-logo" />
+    <h1>Movies4U</h1>
+    <div class="image-container">
+        
+    </div>
+
+    <div class="buttons-container">
+        <button class="btn btn-primary" @onclick="GoToLogin">Login</button>
+        <button class="btn btn-primary" @onclick="GoToRegister">Register</button>
+    </div>
 </div>
 @code {
     private void GoToLogin()

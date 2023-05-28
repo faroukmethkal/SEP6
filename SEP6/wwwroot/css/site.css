@@ -2,6 +2,7 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-image:url("/img/movies4u-background.jpg");
 }
 
 h1:focus {
