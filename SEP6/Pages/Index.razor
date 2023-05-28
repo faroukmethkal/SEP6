@@ -58,7 +58,7 @@
 
         public async Task AddToFavorites(string movieId)
     {
-        int intMovieId = int.Parse(movieId);
+        int intMovieId = int.Parse(movieId.Replace("t", ""));
         var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
      
 

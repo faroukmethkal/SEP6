@@ -9,6 +9,16 @@
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Inputs
 
+<style>
+
+    .e-rating-container.custom-font .e-rating-item-list:hover .e-rating-item-container .e-rating-icon,
+    .e-rating-container.custom-font .e-rating-item-container .e-rating-icon {
+        /* To change rated symbol fill color and un-rated symbol fill color */
+        background: linear-gradient(to right, #ffe814 var(--rating-value), #d8d7d4 var(--rating-value));
+        background-clip: text;
+        -webkit-background-clip: text;
+    }
+</style>
 
 <div class="container">
     <table class="table">
