@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Blazored.Toast;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -25,7 +26,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStat
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddSyncfusionBlazor();
-
+builder.Services.AddBlazoredToast();
 
 
 // Register HttpClient service

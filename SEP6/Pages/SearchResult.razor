@@ -1,4 +1,5 @@
 ﻿@page "/searchresults"
+@using System
 @using Newtonsoft.Json;
 @using SEP6.Data;
 @using SEP6.Models;
@@ -10,6 +11,10 @@
 @using Syncfusion.Blazor.Inputs
 @using System.Security.Claims
 @using SEP6.Authentication;
+@using SEP6.Pages.Components;
+@inject IToastService toastService
+
+
 
 
 
@@ -101,7 +106,7 @@
                                 <div>
                                     <SfRating CssClass="custom-font" ShowLabel="true" ShowTooltip="true" Precision="PrecisionType.Exact" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
                                 </div>
-                                <button id="AddToFavoriteButton" @onclick="() => AddToFavorites(movie.Id)" class="btn btn-primary">Add To Favorites List</button>
+                                <button @onclick="() => AddToFavorites(movie.Id)" class="btn btn-primary">Add To Favorites List</button>
                             </td>
                         </tr>
                     }
@@ -111,6 +116,9 @@
         </div>
     </Authorized>
 </AuthorizeView>
+<Notification>
+
+</Notification>
 
 @code {
 
@@ -121,9 +129,9 @@
     public List<Movies> moviesList { get; set; }
     [Parameter]
     public List<MoviesOMDB> Posters { get; set; }
-  
-    
-    
+
+
+
 
 
     protected override async Task OnParametersSetAsync()
@@ -132,8 +140,8 @@
         var uri = new Uri(NavigationManager.Uri);
         var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
         moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
-
         await base.OnParametersSetAsync();
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -171,16 +179,24 @@
     public async Task AddToFavorites(int movieId)
     {
         var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
-     
+
 
         var user = JsonConvert.DeserializeObject<User>(serializedUser);
         var username = user.Name;
-
-        if (!string.IsNullOrEmpty(username))
-        {
-            Console.WriteLine("Adding to favorites");
-            await movieService.PostFavoriteMovies(username, movieId);
+        try{
+            if (!string.IsNullOrEmpty(username))
+            {
+                Console.WriteLine("Adding to favorites");
+                await movieService.PostFavoriteMovies(username, movieId);
+                toastService.ShowSuccess("Movie added to favorites.");
+                
+            }
         }
-    }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+            toastService.ShowError("Movie cannot be added to favorites");
+        }
+}
 
 }

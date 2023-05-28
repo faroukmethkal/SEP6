@@ -19,6 +19,9 @@ namespace SEP6.Data
             this.httpClient = httpClient;
         }
 
+        public MovieService()
+        {
+        }
 
         public async Task<OMDBResult> GetMoviesFromOMDb(string title)
         {
@@ -150,6 +153,42 @@ namespace SEP6.Data
 
                     // Add the movie to the user's favorite movies list
                     user.Favorites.Add(movie);
+
+                    return user;
+                }
+                else
+                {
+                    throw new Exception(responseStatusCode);
+                }
+            }
+        }
+
+        public async Task<User> RemoveFromFavorites(string username, int movieId)
+        {
+            User user = new User();
+            Movies movie = new Movies();
+            user.Favorites = new List<Movies>();
+
+            Console.WriteLine("Entering RemoveFavoriteMovie");
+            string baseUrl = "https://app-backend-sep-230516174355.azurewebsites.net/topList";
+            string name = username;
+
+            string encodedUsername = Uri.EscapeDataString(username);
+            string url = $"{baseUrl}?username={encodedUsername}&movieId={movieId}";
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, url);
+
+            using (HttpClient client = new HttpClient())
+            {                                                                                               
+                var response = await client.SendAsync(httpRequestMessage);
+                var responseStatusCode = response.StatusCode.ToString().ToLower();
+
+                if (responseStatusCode.Equals("ok"))
+                {
+                    user.Name = name;
+                    movie.Id = movieId;
+
+                    // Remove the movie from the user's favorite movies list
+                    user.Favorites.Remove(movie);
 
                     return user;
                 }

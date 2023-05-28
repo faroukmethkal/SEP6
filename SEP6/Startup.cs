@@ -2,6 +2,7 @@
 using SEP6.Authentication;
 using SEP6.Data;
 using Blazored.LocalStorage;
+using Blazored.Toast;
 
 namespace SEP6
 {
@@ -32,8 +33,6 @@ namespace SEP6
             {
                 client.BaseAddress = new Uri("https://app-backend-sep-230516174355.azurewebsites.net/");
             });
-
-
 
             services.AddAuthorization(options =>
             {

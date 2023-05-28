@@ -47,7 +47,20 @@
         font-size: 18px;
     }
 }
-.favorite-button {
-    border-radius: 6px;
-   
+
+.btn {
+    /*background-color: DodgerBlue;*/
+    background-image: linear-gradient(to right, rgb(0, 191, 255) 0%, #3a0647 70%);
+    border: none;
+    color: white;
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left:130px;
 }
+
+    /* Darker background on mouse-over */
+    .btn:hover {
+        background-color: RoyalBlue;
+    }
+

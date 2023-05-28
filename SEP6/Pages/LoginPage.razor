@@ -9,43 +9,39 @@
 @using SEP6.Data;
 @using SEP6.Models;
 
-
-<style>
-    .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-    }
-
-    .bottom-row {
-        margin-top: auto;
-    }
-
-    .spacer {
-        flex: 1;
-    }
-
-    h3 {
-        text-align: center;
-    }
-    p{
-        color:darkred;
-    }
-
-    .custom-btn {
-        width: 200px;
-        margin-top: 15px;
-    }
-</style>
-
-
-<h3>Movies4U</h3>
-
+<h2>Movies4U</h2>
 <div class="container">
     <div class="image-container">
-        <img src="img/movie_system_logo.jpg" alt="Movies 4 U" />
+        <img src="/img/favpng_movie-logo.png" class="login-page-logo" />
+    </div>
+
+    <div class="form-group px-4">
+        <label for="name">Name:</label>
+        <input autofocus="true" id="name" class="form-control" @bind="@name" />
+    </div>
+
+    <div class="form-group px-4">
+        <label for="id">Password:</label>
+        <input type="password" id="myInput" class="form-control" @bind="@password" />
+    </div>
+
+    <div class="bottom-row px-4">
+        <div class="spacer"></div> <!-- Spacer to push the login button below -->
+        <AuthorizeView>
+            <NotAuthorized>
+                <div>
+                    <button class="btn btn-primary custom-btn" @onclick="Login">Login</button>
+                </div>
+                <div>
+                    <button class="btn btn-primary custom-btn" @onclick="GoBack">Go Back</button>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</div>
+@*<div class="container">
+    <div class="image-container">
+        <img src="/img/favpng_movie-logo.png" class="login-page-logo" />
     </div>
 
     <div class="form-group px-4">
@@ -72,7 +68,7 @@
         </AuthorizeView>
 
     </div>
-</div>
+</div>*@
 <p>@errorMessage</p>
 
 @code {

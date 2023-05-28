@@ -2,12 +2,15 @@
 @using Newtonsoft.Json;
 @using SEP6.Data;
 @using SEP6.Models;
+@using SEP6.Pages.Components;
 @using System.Globalization;
 @inject HttpClient httpClient
 @inject IMovieService movieService
 @inject IUserService userService
 @inject IJSRuntime JSRuntime
-
+@inject IToastService toastService
+<AuthorizeView>
+    <Authorized>
 <h3 id="MoviesTitleIndex">Movies</h3>
 
 @if (moviesList != null && moviesList.Search != null)
@@ -21,17 +24,25 @@
                         <img src="@movie.Poster" class="poster-image" />
                         <div class="movie-info">
                             <div class="movie-title">@movie.Title</div>
-                            <div class="movie-details">
-                                <span class="movie-type">@textInfo.ToTitleCase(movie.Type)</span> - <span class="movie-year">@movie.Year</span>
-                                <button id="AddToFavoriteButton" @onclick="() => AddToFavorites(movie.ImdbID)" class="fa fa-heart"> Add</button>
+                            <div class="movie-details" style="width: 20%; float:left">
+                                <span class="movie-type">@textInfo.ToTitleCase(movie.Type)</span>  <span class="movie-year">@movie.Year</span>
+                                
                             </div>
+                            <div style="width: 80%; float:right">
+                            <button @onclick="() => AddToFavorites(movie.ImdbID)" class="fa fa-heart btn"> Add to favorites</button>
+                            </div
                         </div>
                     </div>
                 </div>
             }
         </div>
     </div>
+<Notification>
+
+</Notification>
 }
+    </Authorized>
+</AuthorizeView>
 @code {
 
     public OMDBResult moviesList { get; set; }
@@ -56,19 +67,28 @@
         }
     }
 
-        public async Task AddToFavorites(string movieId)
+    public async Task AddToFavorites(string movieId)
     {
         int intMovieId = int.Parse(movieId.Replace("t", ""));
         var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
-     
 
         var user = JsonConvert.DeserializeObject<User>(serializedUser);
         var username = user.Name;
 
         if (!string.IsNullOrEmpty(username))
         {
-            Console.WriteLine("Adding to favorites");
-            await movieService.PostFavoriteMovies(username, intMovieId);
+            try
+            {
+                Console.WriteLine("Adding to favorites");
+                await movieService.PostFavoriteMovies(username, intMovieId);
+                toastService.ShowSuccess("Movie added to favorites.");
+                
+            }
+            catch (Exception ex)
+            {
+               Console.WriteLine(ex);
+                toastService.ShowError("Movie could not be added to favorites.");
+            }
         }
 
         

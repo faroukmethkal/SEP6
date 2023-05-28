@@ -2,12 +2,18 @@
 @using Newtonsoft.Json;
 @using SEP6.Data;
 @using SEP6.Models;
+@using SEP6.Authentication;
+@using SEP6.Pages.Components;
+@using System.Globalization;
 @inject IUserService userService
 @inject IMovieService movieService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 @using Syncfusion.Blazor
 @using Syncfusion.Blazor.Inputs
+@inject IToastService toastService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 
 <style>
 
@@ -19,7 +25,8 @@
         -webkit-background-clip: text;
     }
 </style>
-
+<AuthorizeView>
+    <Authorized>
 <div class="container">
     <table class="table">
         <tbody>
@@ -90,14 +97,24 @@
                         <div>
                             <SfRating CssClass="custom-font" ShowLabel="true" ShowTooltip="true" Precision="PrecisionType.Exact" ItemsCount="10" Value="@movie.rating?.rating"> </SfRating>
                         </div>
+                            @*<button id="RemoveFromFavorites"  class="fa fa-close"></button>*@
+                            <button @onclick="() => RemoveFromFavoritesList(movie.Id)" class="btn"><i class="fa fa-close"></i> Remove From favorites</button>
                     </td>
+                        
                 </tr>
+                    
             }
             }
         </tbody>
+        
     </table>
 </div>
 
+<Notification>
+     
+</Notification>
+    </Authorized>
+</AuthorizeView>
 @code {
 
     [Parameter]
@@ -109,16 +126,57 @@
     public Movies movie { get; set; }
 
     public User userFavorites { get; set; }
+    public string username { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
-        var user = JsonConvert.DeserializeObject<User>(serializedUser);
-        var username = user.Name;
+        var authState = await authenticationState;
+        var user = authState?.User;
 
-        if (username != null)
+        if (user?.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var serializedUser = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+            var deserializedUser = JsonConvert.DeserializeObject<User>(serializedUser);
+            username = deserializedUser.Name;
+            await LoadFavoriteMovies();
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/login"); // Redirect to the login page
+        }
+    }
+
+    private async Task LoadFavoriteMovies()
+    {
+        try
         {
             userFavorites = await movieService.GetFavoriteMovies(username);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            toastService.ShowError("Failed to load favorite movies.");
+        }
+    }
+
+    public async Task RemoveFromFavoritesList(int movieId)
+    {
+        if (!string.IsNullOrEmpty(username))
+        {
+            try
+            {
+                Console.WriteLine("Removing from favorites");
+                await movieService.RemoveFromFavorites(username, movieId);
+                toastService.ShowSuccess("Movie removed from favorites.");
+                await LoadFavoriteMovies();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                toastService.ShowError("Failed to remove movie from favorites.");
+            }
         }
     }
 }
