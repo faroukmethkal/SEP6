@@ -44,4 +44,11 @@ public class UserController {
 
     }
 
+    @DeleteMapping("/topList")
+    public ResponseEntity<String> removeFromTopList(@RequestParam(required = true) String username,  Integer movieId) {
+        return userService.deleteMovie(username, movieId);
+
+    }
+
+
 }

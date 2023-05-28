@@ -2,9 +2,11 @@ package com.movie4u.sep.service;
 
 import com.movie4u.sep.db.MovieRepository;
 import com.movie4u.sep.db.TopListMovieRepository;
+import com.movie4u.sep.db.entity.TopListMovie;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
 class UserServiceTest {
@@ -12,7 +14,9 @@ class UserServiceTest {
     @Autowired
     TopListMovieRepository topListMovieRepository;
     @Autowired
-    MovieRepository movieRepository;
+    UserService userService;
+
+
 
     @Test
     void save() {
@@ -30,6 +34,15 @@ class UserServiceTest {
             list.add(t.getMovieId());
         }
         System.out.println(movieRepository.findAllById(list).size());
+    }*/
+
+/*    @Test
+    public void deleteMovie() {
+
+        var result = topListMovieRepository.findByUsernameAndMovieId("username2", 54724);
+        topListMovieRepository.delete(result);
+        System.out.println(result.getMovieId());
+        System.out.println(result.getUsername());
     }*/
 
 }

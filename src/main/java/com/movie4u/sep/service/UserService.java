@@ -45,14 +45,15 @@ public class UserService {
         return user.filter(user1 -> user1.getPassword().equals(password)).isPresent();
 
     }
+
     public ResponseEntity<String> register(User user) {
 
         try {
             userRepository.save(user);
             ResponseEntity.ok("Resister user");
-        } catch (Exception  e) {
+        } catch (Exception e) {
             e.printStackTrace();
-           return ResponseEntity.badRequest().body("Couldn't Register check Username maybe it already exist");
+            return ResponseEntity.badRequest().body("Couldn't Register check Username maybe it already exist");
         }
 
         return ResponseEntity.badRequest().build();
@@ -88,5 +89,15 @@ public class UserService {
         return movieRepository.findAllById(listId)
                 .stream().map(m -> mapper.map(m))
                 .toList();
+    }
+
+    public ResponseEntity<String> deleteMovie(String username, Integer movieId) {
+        try {
+            var result = topListMovieRepository.findByUsernameAndMovieId(username.trim(), movieId);
+            topListMovieRepository.delete(result);
+            return ResponseEntity.ok("Removed");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Check username or password");
+        }
     }
 }

@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface TopListMovieRepository extends JpaRepository<TopListMovie, Long> {
     Optional<List<TopListMovie>> findAllByUsername(String username);
+    TopListMovie findByUsernameAndMovieId(String username, Integer movieId);
 }
