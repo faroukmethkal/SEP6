@@ -133,8 +133,6 @@
         var moviesJson = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("movies");
         moviesList = JsonConvert.DeserializeObject<List<Movies>>(moviesJson);
 
-        //Posters = await movieService.GetPosterForMovie(title);
-
         await base.OnParametersSetAsync();
     }
 

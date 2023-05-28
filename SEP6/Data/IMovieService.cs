@@ -9,6 +9,6 @@ namespace SEP6.Data
         Task<OMDBResult> GetMoviesFromOMDb(string title);
         Task<User> GetFavoriteMovies(string username);
         Task<User> PostFavoriteMovies(string username, int movieId);
-        //Task<MoviesOMDB> GetOMDbPosters(string imdbId);
+        
     }
 }
