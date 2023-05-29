@@ -37,8 +37,7 @@ namespace SEP6.Authentication
                 var cachedUser = JsonConvert.DeserializeObject<User>(userAsJson);
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.Name, cachedUser.Name),
-                    // Add other claims as needed
+                    new Claim(ClaimTypes.Name, cachedUser.Name),  
                 };
                 identity = new ClaimsIdentity(claims, "custom");
             }
@@ -67,7 +66,6 @@ namespace SEP6.Authentication
                 identity = new ClaimsIdentity(new[]
                 {
                     new Claim(ClaimTypes.Name, user.Name),
-                    // Add other claims as needed
                 }, "custom");
             }
             catch (Exception e)
