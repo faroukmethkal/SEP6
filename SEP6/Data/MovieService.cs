@@ -29,7 +29,7 @@ namespace SEP6.Data
             string apiKey = "c04f487";
 
             string encodedTitle = Uri.EscapeDataString(title);
-            string url = $"{baseUrl}?s={encodedTitle}&apikey={apiKey}";
+            string url = $"{baseUrl}?apikey={apiKey}&s={encodedTitle}";
 
             var response = await httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();

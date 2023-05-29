@@ -32,11 +32,11 @@
 </div>
 
 @code {
-    [CascadingParameter (Name="searchedMovie")]
+    [CascadingParameter(Name = "searchedMovie")]
     public string searchedMovie { get; set; }
+
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-
 
 
     protected override async Task OnInitializedAsync()
@@ -48,13 +48,27 @@
 
             if (user?.Identity is not null && user.Identity.IsAuthenticated)
             {
-                NavigationManager.NavigateTo("/index");
+                var currentPage = NavigationManager.Uri;
+
+                // Check if the current page is the favorites page
+                if (currentPage.Contains("/favorites"))
+                {
+                    Console.WriteLine("Current page: Favorites");
+                    // Handle the favorites page initialization logic
+                }
+                else
+                {
+                    Console.WriteLine("Current page: Index");
+                    // Handle the index page initialization logic
+                }
             }
             else
+            {
                 NavigationManager.NavigateTo("/landingpage");
+            }
         }
     }
- 
+
     private async Task PerformLogout()
     {
         ((CustomAuthenticationStateProvider)AuthenticationStateProvider).Logout();

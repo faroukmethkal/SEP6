@@ -5,14 +5,14 @@ using Newtonsoft.Json;
 using SEP6.Data;
 using SEP6.Models;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SEP6.Authentication
 {
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
+    public class CustomAuthenticationStateProvider : ServerAuthenticationStateProvider
     {
         private readonly IJSRuntime jsonRuntime;
         private readonly IUserService serverData;
-        private User cachedUser;
 
         public CustomAuthenticationStateProvider(IJSRuntime jsonRuntime, IUserService serverData)
         {
@@ -20,21 +20,30 @@ namespace SEP6.Authentication
             this.serverData = serverData;
         }
 
-     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var identity = new ClaimsIdentity();
-            if (cachedUser == null)
+            var authState = await base.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user?.Identity != null && user.Identity.IsAuthenticated)
             {
-                string userAsJson = await jsonRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
-                if (!string.IsNullOrEmpty(userAsJson))
-                {
-                    User tmp = JsonConvert.DeserializeObject<User>(userAsJson);
-                    await ValidateLogin(tmp.Name, tmp.Password);
-                }
+                return authState;
             }
 
-            ClaimsPrincipal cachedClaimsPrincipal = new ClaimsPrincipal(identity);
-            return await Task.FromResult(new AuthenticationState(cachedClaimsPrincipal));
+            var identity = new ClaimsIdentity();
+            string userAsJson = await jsonRuntime.InvokeAsync<string>("sessionStorage.getItem", "currentUser");
+            if (!string.IsNullOrEmpty(userAsJson))
+            {
+                var cachedUser = JsonConvert.DeserializeObject<User>(userAsJson);
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, cachedUser.Name),
+                    // Add other claims as needed
+                };
+                identity = new ClaimsIdentity(claims, "custom");
+            }
+
+            return new AuthenticationState(new ClaimsPrincipal(identity));
         }
 
         public async Task ValidateLogin(string name, string password)
@@ -46,34 +55,37 @@ namespace SEP6.Authentication
             else if (string.IsNullOrEmpty(password))
             {
                 throw new Exception("Enter password");
-            } 
-            
+            }
 
-            ClaimsIdentity identity = new ClaimsIdentity("authorized");
+            ClaimsIdentity identity = new ClaimsIdentity("custom");
             try
             {
-                User user1 = await serverData.LoginUser(name, password);
+                User user = await serverData.LoginUser(name, password);
 
-                string serialisedData = JsonConvert.SerializeObject(user1);
-                await jsonRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serialisedData);
-                cachedUser = user1;
+                string serializedData = JsonConvert.SerializeObject(user);
+                await jsonRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", serializedData);
+                identity = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, user.Name),
+                    // Add other claims as needed
+                }, "custom");
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
 
-            NotifyAuthenticationStateChanged(
-                Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity))));
+            var authState = new AuthenticationState(new ClaimsPrincipal(identity));
+            NotifyAuthenticationStateChanged(Task.FromResult(authState));
+            SetAuthenticationState(Task.FromResult(authState));
         }
 
         public void Logout()
         {
-            cachedUser = null;
-            var user = new ClaimsPrincipal(new ClaimsIdentity());
-            jsonRuntime.InvokeVoidAsync("sessionStorage.setItem", "currentUser", "");
-            NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
+            jsonRuntime.InvokeVoidAsync("sessionStorage.removeItem", "currentUser");
+            var authState = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            NotifyAuthenticationStateChanged(Task.FromResult(authState));
+            SetAuthenticationState(Task.FromResult(authState));
         }
-
     }
 }

@@ -9,6 +9,10 @@
 @inject IUserService userService
 @inject IJSRuntime JSRuntime
 @inject IToastService toastService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+
 <AuthorizeView>
     <Authorized>
 <h3 id="MoviesTitleIndex">Movies</h3>
@@ -54,9 +58,6 @@
     {
         try
         {
-            //string title = "shawshank";
-            //movieTitles = await movieService.IndexMovie(title);
-
             string title = "The Room";
             moviesList = await movieService.GetMoviesFromOMDb(title);
             // Use the movie data as needed
@@ -64,6 +65,7 @@
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+            toastService.ShowError("ERROR! - Movies could not load.");
         }
     }
 
