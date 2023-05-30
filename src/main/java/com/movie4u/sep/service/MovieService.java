@@ -50,6 +50,18 @@ public class MovieService {
 
     }
 
+    public List<Movie> findMovieByTitle(String title, Integer size) {
+        var pageable = PageRequest.of(0, size);
+        var movies = movieRepository.findByTitleContainingIgnoreCase(title, pageable);
+
+        var mapped =  movies.orElseThrow()
+                .stream().map(m -> mapper.map(m))
+                .toList();
+
+        return mapped;
+
+    }
+
     public ResponseEntity<Movie> findMovieById(int Id) {
 
         var movie = movieRepository.findById(Id);

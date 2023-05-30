@@ -24,6 +24,12 @@ public class MovieController {
               return ResponseEntity.ok(movieService.findMovieByTitle(title));
     }
 
+    @GetMapping("/movies")
+    public ResponseEntity<List<Movie>> findMovieByTitle(@RequestParam(required = true) String title, Integer size) {
+
+        return ResponseEntity.ok(movieService.findMovieByTitle(title, size));
+    }
+
     @GetMapping("/movie")
     public ResponseEntity<Movie> findMovieById(@RequestParam(required = true) int id) {
 
