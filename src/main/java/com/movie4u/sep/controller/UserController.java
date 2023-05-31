@@ -1,7 +1,7 @@
 package com.movie4u.sep.controller;
 
 import com.movie4u.sep.db.entity.User;
-import com.movie4u.sep.models.Movie;
+import com.movie4u.sep.service.models.Movie;
 import com.movie4u.sep.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

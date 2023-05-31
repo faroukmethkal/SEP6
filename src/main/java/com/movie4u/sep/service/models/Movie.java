@@ -1,4 +1,4 @@
-package com.movie4u.sep.models;
+package com.movie4u.sep.service.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.movie4u.sep.controller;
 
-import com.movie4u.sep.models.Movie;
-import com.movie4u.sep.models.People;
-import com.movie4u.sep.models.Rating;
-import com.movie4u.sep.models.RatingStatistics;
+import com.movie4u.sep.service.models.Movie;
+import com.movie4u.sep.service.models.People;
+import com.movie4u.sep.service.models.Rating;
+import com.movie4u.sep.service.models.RatingStatistics;
 import com.movie4u.sep.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

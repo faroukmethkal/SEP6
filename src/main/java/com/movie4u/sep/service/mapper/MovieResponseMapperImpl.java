@@ -1,9 +1,9 @@
-package com.movie4u.sep.mapper;
+package com.movie4u.sep.service.mapper;
 
 import com.movie4u.sep.db.entity.MovieEntity;
-import com.movie4u.sep.models.Movie;
-import com.movie4u.sep.models.People;
-import com.movie4u.sep.models.Rating;
+import com.movie4u.sep.service.models.Movie;
+import com.movie4u.sep.service.models.People;
+import com.movie4u.sep.service.models.Rating;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
